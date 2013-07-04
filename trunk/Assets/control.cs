@@ -12,11 +12,19 @@ public class control : MonoBehaviour {
 	
 	}
 	
+	void onCollisionEnter(Collision c)
+	{
+		//if(c.gameObject.tag == "door")
+		{
+			Debug.Break();	
+		}
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		
 		//data we need
-		GameObject prim = GameObject.Find("ground");
+		GameObject prim = GameObject.Find("ground"); // reference to a ground plane primitive
 		Plane plane = new Plane(prim.transform.up, 0); 
 	    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 	    float distance;
@@ -52,5 +60,6 @@ public class control : MonoBehaviour {
 			// clamp the speed at <= 0.1f
 			speed = 0.0f;	
 		}
+		
 	}
 }
