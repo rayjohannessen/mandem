@@ -3,8 +3,12 @@ using System.Collections;
 
 public class door : MonoBehaviour {
 	public door partner;
+	
+	public GameObject player;
+	control c;
 	// Use this for initialization
 	
+
 	
 	void Start () {
 		/*
@@ -23,6 +27,16 @@ public class door : MonoBehaviour {
 			}
 		}
 		*/
+		player = GameObject.Find("Player");
+		c = player.GetComponent<control>();
+	}
+	
+	void OnTriggerEnter(Collider col)
+	{
+		if (col.gameObject.name == "Player")
+		{
+			c.Teleport(partner.transform.position);	
+		}
 	}
 	
 	// Update is called once per frame

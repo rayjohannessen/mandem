@@ -1,22 +1,31 @@
 using UnityEngine;
 using System.Collections;
 
-
-
 public class control : MonoBehaviour {
 	public Vector3 target; // position vector of our destination
 	public float speed; // the speed we are moving
+	public string state; // SEEKING, IDLE
 	
 	// Use this for initialization
 	void Start () {
-	
+		state = "idle";
 	}
 	
-	void onCollisionEnter(Collision c)
+	public void Teleport (Vector3 pos)
 	{
-		//if(c.gameObject.tag == "door")
+		transform.position = pos;	
+	}
+	
+	void OnCollisionEnter(Collision other)	
+	{
+		if(other.gameObject.name == "door")
 		{
-			Debug.Break();	
+			state = "idle";
+		}
+		
+		if(other.gameObject.name == "wall")
+		{
+			state = "idle";	
 		}
 	}
 	
@@ -24,42 +33,39 @@ public class control : MonoBehaviour {
 	void Update () {
 		
 		//data we need
-		GameObject prim = GameObject.Find("ground"); // reference to a ground plane primitive
-		Plane plane = new Plane(prim.transform.up, 0); 
+		Vector3 up = new Vector3(0,1,0);
+		Plane plane = new Plane(up, 0); 
 	    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 	    float distance;
 		
 		//check for input
-		if(Input.GetMouseButtonDown(1))
+		if(Input.GetMouseButton(1))
 		{
 		
 		    if(plane.Raycast(ray, out distance))
 			{
 		        target = ray.GetPoint(distance);
 				target.y = transform.position.y;
-				speed = 20.0f;
+				speed = 500.0f;
 				transform.LookAt(target);
+				state = "seeking";
 		    }
 		
 		}
 		
-		//move toward destination
-		if (speed > 0.01)
-		{
-			
-			transform.position += transform.forward * speed * Time.deltaTime;
-			
-			// acceleration falloff
-			if (Vector3.Distance(transform.position, target) < 0.5f)
+		//accelerate toward destination while five feet away
+
+			float dist = Vector3.Distance(transform.position, target);
+			if (state == "seeking")
 			{
-				speed *= 0.5f;
+			rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
+			transform.LookAt(target);
 			}
-		}
-		else
-		{
-			// clamp the speed at <= 0.1f
-			speed = 0.0f;	
-		}
+		
+			if (dist <4.5f)
+			{
+			state = "idle";
+			}
 		
 	}
 }
