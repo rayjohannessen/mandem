@@ -35,7 +35,7 @@ public class door : MonoBehaviour {
 	{
 		if (col.gameObject.name == "Player")
 		{
-			c.Teleport(partner.transform.position);	
+			c.Teleport((col.gameObject.transform.position - transform.position) + partner.transform.position);	
 		}
 	}
 	
