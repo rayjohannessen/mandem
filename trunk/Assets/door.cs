@@ -35,7 +35,14 @@ public class door : MonoBehaviour {
 	{
 		if (col.gameObject.name == "Player")
 		{
-			c.Teleport((col.gameObject.transform.position - transform.position) + partner.transform.position);	
+			if (c.state == "seeking")
+			{
+			Vector3 destposition = new Vector3();
+			Quaternion destrotation = new Quaternion();
+			destposition = partner.transform.position + partner.transform.forward;
+			destrotation = partner.transform.rotation;
+			c.Teleport(destposition, destrotation);	
+			}
 		}
 	}
 	

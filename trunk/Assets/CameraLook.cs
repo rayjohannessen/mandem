@@ -6,21 +6,37 @@ public class CameraLook : MonoBehaviour {
 	public GameObject playerHandle;
 	public float cameraFollowDistance;
 	public float cameraFollowHeight;
+	public Vector3 destination;
+	private Vector3 dif;
 	
 	// Use this for initialization
 	void Start () {
 		playerHandle = (GameObject.Find ("Player"));
+		destination = new Vector3(playerHandle.transform.position.x, playerHandle.transform.position.y, playerHandle.transform.position.z);
+		dif = new Vector3();
+	}
+	
+	public void tele()
+	{
+		
+		destination = playerHandle.transform.position;
+		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
+		destination.y += cameraFollowHeight;
+		
+		transform.position = destination;	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 destination = new Vector3(playerHandle.transform.position.x, playerHandle.transform.position.y, playerHandle.transform.position.z);
+		destination = playerHandle.transform.position;
 		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
 		destination.y += cameraFollowHeight;
 		
 	//transform.translate
-	transform.position += (destination - transform.position) * 0.5f * Time.deltaTime;
+	transform.position += (destination - transform.position) * 0.75f * Time.deltaTime;
 	transform.LookAt(playerHandle.transform.position);
+		
+		
 
 	}
 }
