@@ -5,15 +5,23 @@ public class control : MonoBehaviour {
 	public Vector3 target; // position vector of our destination
 	public float speed; // the speed we are moving
 	public string state; // SEEKING, IDLE
+	public GameObject p_cam;
+	
+	CameraLook p_camScript;
 	
 	// Use this for initialization
 	void Start () {
 		state = "idle";
+		p_cam = GameObject.Find ("Main Camera");
+		p_camScript = p_cam.GetComponent<CameraLook>();
 	}
 	
-	public void Teleport (Vector3 pos)
+	public void Teleport (Vector3 tov, Quaternion toq)
 	{
-		transform.position = pos;	
+		transform.position = tov;
+		transform.rotation = toq;	
+		state = "idle";
+		p_camScript.tele();
 	}
 	
 	void OnCollisionEnter(Collision other)	
