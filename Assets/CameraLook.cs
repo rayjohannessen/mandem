@@ -8,6 +8,7 @@ public class CameraLook : MonoBehaviour {
 	public float cameraFollowHeight;
 	public Vector3 destination;
 	private Vector3 dif;
+	private float actualDist;
 	
 	// Use this for initialization
 	void Start () {
@@ -18,9 +19,8 @@ public class CameraLook : MonoBehaviour {
 	
 	public void tele()
 	{
-		
 		destination = playerHandle.transform.position;
-		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
+		destination += playerHandle.transform.forward * -1.0f * (actualDist);
 		destination.y += cameraFollowHeight;
 		
 		transform.position = destination;	
@@ -32,11 +32,10 @@ public class CameraLook : MonoBehaviour {
 		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
 		destination.y += cameraFollowHeight;
 		
-	//transform.translate
-	transform.position += (destination - transform.position) * 0.75f * Time.deltaTime;
-	transform.LookAt(playerHandle.transform.position);
-		
-		
-
+		//transform.translate
+		transform.position += (destination - transform.position) * 0.75f * Time.deltaTime;
+		transform.LookAt(playerHandle.transform.position);
+		dif = playerHandle.transform.position - transform.position;
+		actualDist = Vector3.Dot(dif, playerHandle.transform.forward);
 	}
 }
