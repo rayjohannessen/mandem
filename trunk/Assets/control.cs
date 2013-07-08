@@ -18,8 +18,10 @@ public class control : MonoBehaviour {
 	
 	public void Teleport (Vector3 tov, Quaternion toq)
 	{
+		rigidbody.velocity = Vector3.zero; // reverse force
 		transform.position = tov;
-		transform.rotation = toq;	
+		transform.rotation = toq;
+		rigidbody.velocity = transform.forward * 2.0f; // apply force
 		state = "idle";
 		p_camScript.tele();
 	}
@@ -28,7 +30,7 @@ public class control : MonoBehaviour {
 	{
 		if(other.gameObject.name == "door")
 		{
-			state = "idle";
+			//state = "idle";
 		}
 		
 		if(other.gameObject.name == "wall")

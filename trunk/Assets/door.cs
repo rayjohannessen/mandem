@@ -39,7 +39,7 @@ public class door : MonoBehaviour {
 			{
 			Vector3 destposition = new Vector3();
 			Quaternion destrotation = new Quaternion();
-			destposition = partner.transform.position + partner.transform.forward;
+			destposition = partner.transform.position + (partner.transform.forward * 0.5f);
 			destrotation = partner.transform.rotation;
 			c.Teleport(destposition, destrotation);	
 			}
