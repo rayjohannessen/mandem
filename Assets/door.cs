@@ -11,22 +11,32 @@ public class door : MonoBehaviour {
 
 	
 	void Start () {
-		/*
+		partner = null;
 		if (!partner)
 		{
-			door[] doors = GameObject.FindGameObjectsWithTag("door");
+			door[] doors = FindObjectsOfType(typeof(door)) as door[];
 			
+			
+			//HingeJoint[] hinges = FindObjectsOfType(typeof(HingeJoint)) as HingeJoint[];
+			while (!partner)
+			{
 			foreach (door i in doors)
 			{
-				if (!i.partner)
+				if ( i != this)
 				{
-					i.partner = this;
-					partner = i;
-					break;
+					// maybe select a partner
+						if(Random.value > 0.5f)
+						{
+							i.partner = this;
+							partner = i;
+							break;
+						}
+					
 				}
 			}
+			}
 		}
-		*/
+		
 		player = GameObject.Find("Player");
 		c = player.GetComponent<control>();
 	}
