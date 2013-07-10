@@ -36,7 +36,7 @@ public class CameraLook : MonoBehaviour {
 		destination.y += cameraFollowHeight;
 		
 		//transform.translate
-		transform.position += (destination - transform.position) * 2.75f * Time.deltaTime;
+		transform.position += (destination - transform.position) * 1.75f * Time.deltaTime;
 		transform.LookAt(playerHandle.transform.position);
 		dif = playerHandle.transform.position - transform.position;
 		actualDist = Vector3.Dot(dif, playerHandle.transform.forward);
