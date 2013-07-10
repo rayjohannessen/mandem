@@ -56,7 +56,7 @@ public class control : MonoBehaviour {
 			{
 		        target = ray.GetPoint(distance);
 				target.y = transform.position.y;
-				speed = 500.0f;
+				speed = 1250.0f;
 				transform.LookAt(target);
 				state = "seeking";
 		    }

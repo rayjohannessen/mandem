@@ -6,6 +6,7 @@ public class door : MonoBehaviour {
 	
 	public GameObject player;
 	control c;
+	CameraLook p_cam;
 	// Use this for initialization
 	
 
@@ -38,6 +39,7 @@ public class door : MonoBehaviour {
 		}
 		
 		player = GameObject.Find("Player");
+		p_cam = GameObject.Find ("Main Camera").GetComponent<CameraLook>();
 		c = player.GetComponent<control>();
 	}
 	
@@ -51,6 +53,11 @@ public class door : MonoBehaviour {
 			Quaternion destrotation = new Quaternion();
 			destposition = partner.transform.position + (partner.transform.forward * 0.5f);
 			destrotation = partner.transform.rotation;
+				
+			p_cam.dif = transform.position - c.p_cam.transform.position; // base new camera orientation off of the relativity to the IN door
+			p_cam.actualDist = Vector3.Dot(p_cam.dif, transform.forward); // calculate relative z distance
+			p_cam.actualXDist = Vector3.Dot(p_cam.dif, transform.right); // calculate relative x distance
+				
 			c.Teleport(destposition, destrotation);	
 			}
 		}
