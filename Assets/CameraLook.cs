@@ -39,7 +39,7 @@ public class CameraLook : MonoBehaviour {
 		
 		//Interpolate position and look at player
 		transform.position += (destination - transform.position) * 1.75f * Time.deltaTime;
-		transform.LookAt(playerHandle.transform.position + Vector3.up * 2.0f); // look 2 feet above the players feet
+		transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
 		
 		// calculate relative things.
 		dif = playerHandle.transform.position - transform.position;
