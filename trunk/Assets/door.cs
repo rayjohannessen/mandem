@@ -47,11 +47,12 @@ public class door : MonoBehaviour {
 	{
 		if (col.gameObject.name == "Player")
 		{
-			if (c.state == "seeking")
+			//if (c.state == "seeking")
+			if (Vector3.Dot(c.transform.forward, transform.forward) < 0) 
 			{
 			Vector3 destposition = new Vector3();
 			Quaternion destrotation = new Quaternion();
-			destposition = partner.transform.position + (partner.transform.forward * 0.5f);
+			destposition = partner.transform.position;// + (partner.transform.forward * 0.5f);
 			destrotation = partner.transform.rotation;
 				
 			p_cam.dif = transform.position - c.p_cam.transform.position; // base new camera orientation off of the relativity to the IN door
