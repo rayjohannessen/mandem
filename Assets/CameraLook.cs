@@ -7,8 +7,9 @@ public class CameraLook : MonoBehaviour {
 	public float cameraFollowDistance;
 	public float cameraFollowHeight;
 	public Vector3 destination;
-	private Vector3 dif;
-	private float actualDist;
+	public Vector3 dif;
+	public float actualDist;
+	public float actualXDist;
 	
 	// Use this for initialization
 	void Start () {
@@ -19,9 +20,11 @@ public class CameraLook : MonoBehaviour {
 	
 	public void tele()
 	{
+		// recalculate relative position to OUT door
 		destination = playerHandle.transform.position;
-		destination += playerHandle.transform.forward * -1.0f * (actualDist);
-		destination.y += cameraFollowHeight;
+		destination += playerHandle.transform.forward * (actualDist);
+		destination += playerHandle.transform.right * (actualXDist);
+		destination.y = cameraFollowHeight;
 		
 		transform.position = destination;	
 	}
@@ -33,9 +36,10 @@ public class CameraLook : MonoBehaviour {
 		destination.y += cameraFollowHeight;
 		
 		//transform.translate
-		transform.position += (destination - transform.position) * 0.75f * Time.deltaTime;
+		transform.position += (destination - transform.position) * 2.75f * Time.deltaTime;
 		transform.LookAt(playerHandle.transform.position);
 		dif = playerHandle.transform.position - transform.position;
 		actualDist = Vector3.Dot(dif, playerHandle.transform.forward);
+		actualXDist = Vector3.Dot (dif, playerHandle.transform.right);
 	}
 }
