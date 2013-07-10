@@ -31,13 +31,17 @@ public class CameraLook : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		// calculate where we want to locate ourselves
 		destination = playerHandle.transform.position;
 		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
 		destination.y += cameraFollowHeight;
 		
-		//transform.translate
+		//Interpolate position and look at player
 		transform.position += (destination - transform.position) * 1.75f * Time.deltaTime;
-		transform.LookAt(playerHandle.transform.position);
+		transform.LookAt(playerHandle.transform.position + Vector3.up * 2.0f); // look 2 feet above the players feet
+		
+		// calculate relative things.
 		dif = playerHandle.transform.position - transform.position;
 		actualDist = Vector3.Dot(dif, playerHandle.transform.forward);
 		actualXDist = Vector3.Dot (dif, playerHandle.transform.right);
