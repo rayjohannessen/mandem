@@ -18,7 +18,6 @@ public class door : MonoBehaviour {
 			door[] doors = FindObjectsOfType(typeof(door)) as door[];
 			
 			
-			//HingeJoint[] hinges = FindObjectsOfType(typeof(HingeJoint)) as HingeJoint[];
 			while (!partner)
 			{
 			foreach (door i in doors)
