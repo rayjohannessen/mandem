@@ -16,14 +16,13 @@ public class control : MonoBehaviour {
 		p_camScript = p_cam.GetComponent<CameraLook>();
 	}
 	
-	public void Teleport (Vector3 tov, Quaternion toq)
+	public void Teleport (Vector3 tov, Vector3 toq)
 	{
 		rigidbody.velocity = Vector3.zero; // reverse force
 		transform.position = tov;
-		transform.rotation = toq;
+		transform.Rotate(toq);
 		rigidbody.velocity = transform.forward * 2.0f; // apply force
 		state = "idle";
-		p_camScript.tele();
 	}
 	
 	void OnCollisionEnter(Collision other)	
@@ -46,35 +45,55 @@ public class control : MonoBehaviour {
 		Vector3 up = new Vector3(0,1,0);
 		Plane plane = new Plane(up, 0); 
 	    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-	    float distance;
+		RaycastHit oinfo;
 		
 		//check for input
-		if(Input.GetMouseButton(1))
+		if(Input.GetMouseButtonUp(1))
 		{
-		
-		    if(plane.Raycast(ray, out distance))
-			{
-		        target = ray.GetPoint(distance);
-				target.y = transform.position.y;
-				speed = 750.0f;
-				transform.LookAt(target);
-				state = "seeking";
-		    }
+			//if (state == "idle") // only set a new destination if we found the old one
+				{
+			    if(Physics.Raycast(ray, out oinfo))
+				{
+	
+					
+					if (oinfo.collider.name == "door") // if we click on a door, make sure to head to the position of the door.
+					{
+						target = oinfo.collider.gameObject.transform.position;
+						target.y = transform.position.y;
+					}
+					else
+					{
+			        	target = ray.GetPoint(oinfo.distance); // set our destination to wherever on the ground the mouse has been clicked
+						target.y = transform.position.y;					
+					}
+					
+					speed = 750.0f;
+					transform.LookAt(target);
+					state = "seeking";
+			    }
+			}
 		
 		}
 		
 		//accelerate toward destination while five feet away
 
-			float dist = Vector3.Distance(transform.position, target);
+			float distanceFromTarget = Vector3.Distance(transform.position, target);
+		
 			if (state == "seeking")
 			{
-			rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
-			transform.LookAt(target);
+				rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
+				//transform.position += transform.forward * speed * Time.deltaTime * 0.01f;
 			}
 		
-			if (dist <4.5f)
+			if (distanceFromTarget < 0.5f)
 			{
-			state = "idle";
+			//	speed *= 0.9f; // slow down once we're 2.5 units away
+			}
+		
+			if (Vector3.Dot(transform.forward, (target - transform.position)) < 0.0f)
+			{
+				transform.position = target;
+				state = "idle";	// stop seeking a new position once we break epsilon of .01
 			}
 		
 	}

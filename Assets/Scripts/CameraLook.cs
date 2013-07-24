@@ -20,17 +20,29 @@ public class CameraLook : MonoBehaviour {
 	
 	public void tele()
 	{
-		// recalculate relative position to OUT door
-		destination = playerHandle.transform.position;
-		destination += playerHandle.transform.forward * (actualDist);
-		destination += playerHandle.transform.right * (actualXDist);
-		destination.y = cameraFollowHeight;
+		/*
+		Vector3 dif;
+		dif = _from.InverseTransformPoint(transform.position);
+		dif = Vector3.Reflect(dif, _from.transform.forward);
+		dif = _to.transform.TransformPoint(dif);
+		destination = dif;
+		*/
 		
-		transform.position = destination;	
+		destination = playerHandle.transform.TransformPoint(dif);
+		
+		
+		//destination = playerHandle.transform.position;
+		//destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
+		//destination.y += cameraFollowHeight;
+		
+		transform.position = destination;
+		transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		dif = playerHandle.transform.InverseTransformPoint(transform.position);
 		
 		// calculate where we want to locate ourselves
 		destination = playerHandle.transform.position;
@@ -40,10 +52,5 @@ public class CameraLook : MonoBehaviour {
 		//Interpolate position and look at player
 		transform.position += (destination - transform.position) * 1.75f * Time.deltaTime;
 		transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
-		
-		// calculate relative things.
-		dif = playerHandle.transform.position - transform.position;
-		actualDist = Vector3.Dot(dif, playerHandle.transform.forward);
-		actualXDist = Vector3.Dot (dif, playerHandle.transform.right);
 	}
 }
