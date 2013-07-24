@@ -20,7 +20,7 @@ public class control : MonoBehaviour {
 	{
 		rigidbody.velocity = Vector3.zero; // reverse force
 		transform.position = tov;
-		transform.Rotate(toq);
+		transform.Rotate(toq, Space.World); // VERY IMPORTANT TO SPECIFY THAT WE ARE SETTING ROTATION IN WORLD SPACE HERE
 		rigidbody.velocity = transform.forward * 2.0f; // apply force
 		state = "idle";
 	}
@@ -48,7 +48,7 @@ public class control : MonoBehaviour {
 		RaycastHit oinfo;
 		
 		//check for input
-		if(Input.GetMouseButtonUp(1))
+		if(Input.GetMouseButton(1))
 		{
 			//if (state == "idle") // only set a new destination if we found the old one
 				{
@@ -90,9 +90,9 @@ public class control : MonoBehaviour {
 			//	speed *= 0.9f; // slow down once we're 2.5 units away
 			}
 		
-			if (Vector3.Dot(transform.forward, (target - transform.position)) < 0.0f)
+			if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
 			{
-				transform.position = target;
+				//transform.position = target;
 				state = "idle";	// stop seeking a new position once we break epsilon of .01
 			}
 		

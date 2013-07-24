@@ -48,7 +48,7 @@ public class door : MonoBehaviour {
 	{
 		if (col.gameObject.name == "Player")
 		{
-			if (c.state == "seeking")
+			//if (c.state == "seeking")
 			{
 			if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
 			{
@@ -57,7 +57,7 @@ public class door : MonoBehaviour {
 				vel = Vector3.Reflect(player.transform.forward, transform.forward);
 				vel = transform.InverseTransformDirection(vel);
 				vel = partner.transform.TransformDirection(vel);
-				
+					
 			c.Teleport(partner.transform.position, vel);
 			p_cam.tele(); // update camera position to new player position
 			}
