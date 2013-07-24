@@ -7,6 +7,8 @@ public class door : MonoBehaviour {
 	public GameObject player;
 	control c;
 	CameraLook p_cam;
+	Camera relativeCam;
+	RenderTexture portalTexture;
 	// Use this for initialization
 	
 
@@ -40,28 +42,39 @@ public class door : MonoBehaviour {
 		player = GameObject.Find("Player");
 		p_cam = GameObject.Find ("Main Camera").GetComponent<CameraLook>();
 		c = player.GetComponent<control>();
+		
 	}
 	
 	void OnTriggerEnter(Collider col)
 	{
 		if (col.gameObject.name == "Player")
 		{
-			//if (c.state == "seeking")
-			if (Vector3.Dot(c.transform.forward, transform.forward) < 0) 
+			if (c.state == "seeking")
+			{
+			if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
 			{
 			Vector3 destposition = new Vector3();
-			Quaternion destrotation = new Quaternion();
+			Vector3 destrotation = new Vector3();
+					
 			destposition = partner.transform.position;// + (partner.transform.forward * 0.5f);
-			destrotation = partner.transform.rotation;
+
+					
+				Vector3 vel;
 				
-			p_cam.dif = transform.position - c.p_cam.transform.position; // base new camera orientation off of the relativity to the IN door
-			p_cam.actualDist = Vector3.Dot(p_cam.dif, transform.forward); // calculate relative z distance
-			p_cam.actualXDist = Vector3.Dot(p_cam.dif, transform.right); // calculate relative x distance
+				vel = Vector3.Reflect(player.transform.forward, transform.forward);
+				vel = transform.InverseTransformDirection(vel);
+				vel = partner.transform.TransformDirection(vel);
+					
+					destrotation = vel;
 				
-			c.Teleport(destposition, destrotation);	
+			c.Teleport(destposition, destrotation);
+			p_cam.tele(); // update camera position to new player position
+			}
 			}
 		}
 	}
+	
+	
 	
 	// Update is called once per frame
 	void Update () {
