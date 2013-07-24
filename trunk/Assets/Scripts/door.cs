@@ -14,28 +14,27 @@ public class door : MonoBehaviour {
 
 	
 	void Start () {
+		
 		partner = null;
 		if (!partner)
 		{
 			door[] doors = FindObjectsOfType(typeof(door)) as door[];
 			
-			
 			while (!partner)
 			{
-			foreach (door i in doors)
-			{
-				if ( i != this)
+				foreach (door i in doors)
 				{
-					// maybe select a partner
+					if ( i != this)
+					{
+						// maybe select a partner
 						if(Random.value > 0.5f)
 						{
 							i.partner = this;
 							partner = i;
 							break;
 						}
-					
+					}
 				}
-			}
 			}
 		}
 		
@@ -53,21 +52,13 @@ public class door : MonoBehaviour {
 			{
 			if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
 			{
-			Vector3 destposition = new Vector3();
-			Vector3 destrotation = new Vector3();
-					
-			destposition = partner.transform.position;// + (partner.transform.forward * 0.5f);
-
-					
 				Vector3 vel;
 				
 				vel = Vector3.Reflect(player.transform.forward, transform.forward);
 				vel = transform.InverseTransformDirection(vel);
 				vel = partner.transform.TransformDirection(vel);
-					
-					destrotation = vel;
 				
-			c.Teleport(destposition, destrotation);
+			c.Teleport(partner.transform.position, vel);
 			p_cam.tele(); // update camera position to new player position
 			}
 			}
