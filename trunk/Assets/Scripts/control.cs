@@ -74,6 +74,12 @@ public class control : MonoBehaviour {
 			}
 		
 		}
+		else if (Input.GetMouseButton (0))
+		{
+			float mouseturnspeed = 10.0f;
+			transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * mouseturnspeed);
+			state = "idle";
+		}
 		
 		//accelerate toward destination while five feet away
 
@@ -92,7 +98,6 @@ public class control : MonoBehaviour {
 		
 			if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
 			{
-				//transform.position = target;
 				state = "idle";	// stop seeking a new position once we break epsilon of .01
 			}
 		

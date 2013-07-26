@@ -10,12 +10,17 @@ public class CameraLook : MonoBehaviour {
 	public Vector3 dif;
 	public float actualDist;
 	public float actualXDist;
+	public float lerpSpeed = 1.75f;
+
+	float rotation; // rotation around the player
+	
 	
 	// Use this for initialization
 	void Start () {
 		playerHandle = (GameObject.Find ("Player"));
 		destination = new Vector3(playerHandle.transform.position.x, playerHandle.transform.position.y, playerHandle.transform.position.z);
 		dif = new Vector3();
+		rotation = 0.0f;
 	}
 	
 	public void tele()
@@ -49,8 +54,18 @@ public class CameraLook : MonoBehaviour {
 		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
 		destination.y += cameraFollowHeight;
 		
+		if (!Input.GetMouseButton (1) && Input.GetMouseButton (0))
+		{
+			lerpSpeed = 10.0f;
+			cameraFollowHeight += Input.GetAxis ("Mouse Y");
+		}
+		else
+		{
+			lerpSpeed = 1.75f;	
+		}
+		
 		//Interpolate position and look at player
-		transform.position += (destination - transform.position) * 1.75f * Time.deltaTime;
+		transform.position += (destination - transform.position) * lerpSpeed * Time.deltaTime;
 		transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
 	}
 }
