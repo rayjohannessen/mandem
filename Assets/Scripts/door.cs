@@ -15,7 +15,7 @@ public class door : MonoBehaviour {
 	
 	void Start () {
 		
-		partner = null;
+		//partner = null;
 		if (!partner)
 		{
 			door[] doors = FindObjectsOfType(typeof(door)) as door[];
@@ -48,15 +48,17 @@ public class door : MonoBehaviour {
 	{
 		if (col.gameObject.name == "Player")
 		{
-			//if (c.state == "seeking")
+			if (c.state == "seeking")
 			{
 			if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
 			{
-				Vector3 vel;
+				Vector3 vel; // what will we do with the players orientation?
+					
+					vel = player.transform.forward;
+					vel = transform.InverseTransformDirection (vel);
+					vel = partner.transform.TransformDirection (vel);
+					vel = -vel;
 				
-				vel = Vector3.Reflect(player.transform.forward, transform.forward);
-				vel = transform.InverseTransformDirection(vel);
-				vel = partner.transform.TransformDirection(vel);
 					
 			c.Teleport(partner.transform.position, vel);
 			p_cam.tele(); // update camera position to new player position
