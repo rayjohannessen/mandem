@@ -20,7 +20,7 @@ public class control : MonoBehaviour {
 	{
 		rigidbody.velocity = Vector3.zero; // reverse force
 		transform.position = tov;
-		transform.Rotate(toq, Space.World); // VERY IMPORTANT TO SPECIFY THAT WE ARE SETTING ROTATION IN WORLD SPACE HERE
+		transform.rotation = Quaternion.LookRotation(toq);
 		rigidbody.velocity = transform.forward * 2.0f; // apply force
 		state = "idle";
 	}
