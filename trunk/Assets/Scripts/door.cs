@@ -50,19 +50,16 @@ public class door : MonoBehaviour {
 		{
 			if (c.state == "seeking")
 			{
-			if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
-			{
-				Vector3 vel; // what will we do with the players orientation?
-					
-					vel = player.transform.forward;
-					vel = transform.InverseTransformDirection (vel);
-					vel = partner.transform.TransformDirection (vel);
-					vel = -vel;
-				
-					
-			c.Teleport(partner.transform.position, vel);
-			p_cam.tele(); // update camera position to new player position
-			}
+			    if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
+			    {
+				    Vector3 vel = player.transform.forward;
+				    vel = transform.InverseTransformDirection (vel);
+				    vel = partner.transform.TransformDirection (vel);
+				    vel = -vel;
+    					
+			        c.Teleport(partner.transform.position, vel);
+			        p_cam.tele(); // update camera position to new player position
+			    }
 			}
 		}
 	}

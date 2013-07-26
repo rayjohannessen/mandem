@@ -27,7 +27,7 @@ public class control : MonoBehaviour {
 	
 	void OnCollisionEnter(Collision other)	
 	{
-		if(other.gameObject.name == "door")
+		if(other.gameObject.name.Substring(0, 4) == "door")
 		{
 			//state = "idle";
 		}
@@ -56,7 +56,7 @@ public class control : MonoBehaviour {
 				{
 	
 					
-					if (oinfo.collider.name == "door") // if we click on a door, make sure to head to the position of the door.
+					if (oinfo.collider.name.Substring(0, 4) == "door") // if we click on a door, make sure to head to the position of the door.
 					{
 						target = oinfo.collider.gameObject.transform.position;
 						target.y = transform.position.y;
