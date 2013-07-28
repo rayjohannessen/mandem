@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [AddComponentMenu("")]
 public class uLinkTargetFrameRateFix : MonoBehaviour
 {
-	const float BONUS_TICKS = 2.5f; // give exta ticks to more accurately balance frame time
+	const float BONUS_TICKS = 2.5f; // give extra ticks to more accurately balance frame time
 
 	static uint prevTicksSinceStartup;
 	static int prevSleepTicks;
@@ -53,8 +53,20 @@ public class uLinkTargetFrameRateFix : MonoBehaviour
 		if (sleepTicks > 0) MsgWaitForMultipleObjectsEx(0, null, (uint)sleepTicks, 0, 0);
 	}
 	
-	public static void SetTargetFrameRate(int frameRate)
+	public static bool SetTargetFrameRate(int frameRate)
 	{
+		if (UnityEngine.Application.platform != RuntimePlatform.WindowsPlayer) return false;
+
+		try // make sure there is no issues calling these two native Win32 APIs
+		{
+			timeGetTime();
+			MsgWaitForMultipleObjectsEx(0, null, 0, 0, 0);
+		}
+		catch (Exception)
+		{
+			return false;
+		}
+
 		if (frameRate == 0)
 		{
 			if (singleton != null)
@@ -64,16 +76,18 @@ public class uLinkTargetFrameRateFix : MonoBehaviour
 			}
 
 			targetDeltaTicks = 0;
-			return;
+			return true;
 		}
 
 		targetDeltaTicks = Mathf.RoundToInt(1000f / frameRate + BONUS_TICKS);
 		
-		if (singleton != null) return;
+		if (singleton != null) return true;
 
 		var go = new GameObject("uLinkTargetFrameRateFix");
 		go.AddComponent<uLinkTargetFrameRateFix>();
 		go.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
+
+		return true;
 	}
 }
 #endif
@@ -91,8 +105,17 @@ public static class Application
 		}
 		set
 		{
-			Debug.Log("Override Application.targetFrameRate = " + value + " with uLink's low CPU usage fix.");
-			uLinkTargetFrameRateFix.SetTargetFrameRate(_targetFrameRate = value);
+			_targetFrameRate = value;
+
+			if (uLinkTargetFrameRateFix.SetTargetFrameRate(_targetFrameRate))
+			{
+				Debug.Log("Overridden Application.targetFrameRate = " + _targetFrameRate + " with uLink's low CPU usage fix.");
+			}
+			else
+			{
+				UnityEngine.Application.targetFrameRate = _targetFrameRate;
+			}
+			
 		} 
 	}
 
