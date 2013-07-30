@@ -17,7 +17,7 @@ public class Server : uLink.MonoBehaviour
     /// - creates one for the player (owner)
     /// - creates a proxy for other players (proxy)
     /// </summary>
-    public GameObject AuthSpawnPrefab;
+    GameObject AuthSpawnPrefab;
 
     void Awake()
     {
@@ -60,6 +60,7 @@ public class Server : uLink.MonoBehaviour
 
         // the client can now load the world
         //uLink.Network.RPC(networkView.viewID, "EnterWorld", player, "_WORLD_");
+        GetComponent<SpawnPrefabs>().SpawnPlayer(player);
     }
 
     void uLink_OnPlayerDisconnected(uLink.NetworkPlayer player)

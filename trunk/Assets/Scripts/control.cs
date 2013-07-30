@@ -14,6 +14,13 @@ public class control : MonoBehaviour {
 		state = "idle";
 		p_cam = GameObject.Find ("Main Camera");
 		p_camScript = p_cam.GetComponent<CameraLook>();
+        p_camScript.SetPlayer(gameObject);
+
+        door[] doors = FindObjectsOfType(typeof(door)) as door[];
+        foreach (door d in doors)
+        {
+            d.SetPlayer(gameObject);
+        }
 	}
 	
 	public void Teleport (Vector3 tov, Vector3 toq)

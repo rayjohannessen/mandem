@@ -16,32 +16,16 @@ public class Login : uLink.MonoBehaviour
     public float panelHeight = 200;
     Rect panelRect;
 
-    /*
-     * --- TEMP ---
-     */
-    control player;
-
     void Start()
     {
         float panelPosX = Screen.width / 2 - panelWidth / 2;
         float panelPosY = Screen.height / 2 - panelHeight / 2;
         panelRect = new Rect(panelPosX, panelPosY, panelWidth, panelHeight);
-
-        /*
-         * --- TEMP ---
-         */
-        player = GameObject.Find("Player").GetComponent<control>();
-        player.enabled = false;
     }
 
     // Connection
     void uLink_OnConnectedToServer()
     {
-        /*
-         * --- TEMP ---
-         */
-        player.enabled = true;
-
         //
         // TODO::we'll go to some sort of lobby where matchmaking occurs in the real game..
         //
@@ -51,11 +35,6 @@ public class Login : uLink.MonoBehaviour
     }
     void uLink_OnDisconnectedFromServer(uLink.NetworkDisconnection _mode)
     {
-        /*
-         * --- TEMP ---
-         */
-        player.enabled = false;
-
         Debug.Log("Disconnected from server: " + _mode);
     }
     void uLink_OnFailedToConnect(uLink.NetworkConnectionError error)

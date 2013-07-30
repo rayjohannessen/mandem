@@ -5,16 +5,14 @@ public class door : MonoBehaviour {
 	public door partner;
 	
 	public GameObject player;
-	control c;
+	control m_Control;
 	CameraLook p_cam;
 	Camera relativeCam;
 	RenderTexture portalTexture;
 	// Use this for initialization
 	
-
-	
-	void Start () {
-		
+	void Start () 
+    {
 		//partner = null;
 		if (!partner)
 		{
@@ -38,17 +36,15 @@ public class door : MonoBehaviour {
 			}
 		}
 		
-		player = GameObject.Find("Player");
-		p_cam = GameObject.Find ("Main Camera").GetComponent<CameraLook>();
-		c = player.GetComponent<control>();
-		
+		//player = GameObject.Find("Player");
+		p_cam = GameObject.Find("Main Camera").GetComponent<CameraLook>();
 	}
 	
 	void OnTriggerEnter(Collider col)
 	{
 		if (col.gameObject.name == "Player")
 		{
-			if (c.state == "seeking")
+			if (m_Control != null && m_Control.state == "seeking")
 			{
 			    if (Vector3.Dot(player.transform.forward, transform.forward) < 0.0f) 
 			    {
@@ -57,17 +53,21 @@ public class door : MonoBehaviour {
 				    vel = partner.transform.TransformDirection (vel);
 				    vel = -vel;
     					
-			        c.Teleport(partner.transform.position, vel);
+			        m_Control.Teleport(partner.transform.position, vel);
 			        p_cam.tele(); // update camera position to new player position
 			    }
 			}
 		}
 	}
 	
-	
-	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () 
+    {
 	}
+
+    public void SetPlayer(GameObject _player)
+    {
+        player = _player;
+        m_Control = player.GetComponent<control>();
+    }
 }

@@ -17,8 +17,8 @@ public class CameraLook : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		playerHandle = (GameObject.Find ("Player"));
-		destination = new Vector3(playerHandle.transform.position.x, playerHandle.transform.position.y, playerHandle.transform.position.z);
+// 		playerHandle = (GameObject.Find("Player_Owner"));
+// 		destination = new Vector3(playerHandle.transform.position.x, playerHandle.transform.position.y, playerHandle.transform.position.z);
 		dif = new Vector3();
 		rotation = 0.0f;
 	}
@@ -46,26 +46,35 @@ public class CameraLook : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		dif = playerHandle.transform.InverseTransformPoint(transform.position);
-		
-		// calculate where we want to locate ourselves
-		destination = playerHandle.transform.position;
-		destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
-		destination.y += cameraFollowHeight;
-		
-		if (!Input.GetMouseButton (1) && Input.GetMouseButton (0))
-		{
-			lerpSpeed = 10.0f;
-			cameraFollowHeight += Input.GetAxis ("Mouse Y");
-		}
-		else
-		{
-			lerpSpeed = 1.75f;	
-		}
-		
-		//Interpolate position and look at player
-		transform.position += (destination - transform.position) * lerpSpeed * Time.deltaTime;
-		transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
+	void Update () 
+    {
+        if (playerHandle)
+        {
+            dif = playerHandle.transform.InverseTransformPoint(transform.position);
+
+            // calculate where we want to locate ourselves
+            destination = playerHandle.transform.position;
+            destination += playerHandle.transform.forward * -1.0f * cameraFollowDistance;
+            destination.y += cameraFollowHeight;
+
+            if (!Input.GetMouseButton(1) && Input.GetMouseButton(0))
+            {
+                lerpSpeed = 10.0f;
+                cameraFollowHeight += Input.GetAxis("Mouse Y");
+            }
+            else
+            {
+                lerpSpeed = 1.75f;
+            }
+
+            //Interpolate position and look at player
+            transform.position += (destination - transform.position) * lerpSpeed * Time.deltaTime;
+            transform.LookAt(playerHandle.transform.position + Vector3.up * 4.0f); // look 2 feet above the players feet
+        }
 	}
+
+    public void SetPlayer(GameObject _player)
+    {
+        playerHandle = _player;
+    }
 }
