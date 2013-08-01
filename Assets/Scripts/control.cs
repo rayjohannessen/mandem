@@ -74,7 +74,7 @@ public class control : MonoBehaviour {
 						target.y = transform.position.y;					
 					}
 					
-					speed = 750.0f;
+					speed = 50.0f;
 					transform.LookAt(target);
 					state = "seeking";
 			    }
@@ -94,8 +94,9 @@ public class control : MonoBehaviour {
 		
 			if (state == "seeking")
 			{
-				rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
+				//rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
 				//transform.position += transform.forward * speed * Time.deltaTime * 0.01f;
+                transform.Translate(transform.forward * speed * Time.deltaTime);
 			}
 		
 			if (distanceFromTarget < 0.5f)
