@@ -42,7 +42,7 @@ public class door : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider col)
 	{
-		if (col.gameObject.name == "Player")
+		if (col.gameObject.CompareTag("Player"))
 		{
 			if (m_Control != null && m_Control.state == "seeking")
 			{
