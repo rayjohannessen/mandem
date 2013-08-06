@@ -52,7 +52,8 @@ public class control : MonoBehaviour {
 			    vel = DoorB.TransformDirection (vel);
 			    vel = -vel;
     					
-			    Teleport(DoorB.position, vel);
+			    Teleport(DoorB.position + (Vector3.up * -1), vel); // offset by center vertically
+				
 			    p_camScript.tele(); // update camera position to new player position
 			}
 		}
@@ -93,7 +94,7 @@ public class control : MonoBehaviour {
 						target.y = controller.transform.position.y;					
 					}
 					
-					speed = 50.0f;
+					speed = 15.0f;
 					controller.transform.LookAt(target);
 					state = "seeking";
 			    }
@@ -107,21 +108,12 @@ public class control : MonoBehaviour {
 			state = "idle";
 		}
 		
-		//accelerate toward destination while five feet away
 
 			float distanceFromTarget = Vector3.Distance(controller.transform.position, target);
 		
 			if (state == "seeking")
 			{
-				//rigidbody.AddForce(transform.forward * speed * Time.deltaTime);
-				//transform.position += transform.forward * speed * Time.deltaTime * 0.01f;
-                //transform.Translate(transform.forward * speed * Time.deltaTime);
 				controller.Move(controller.transform.forward * speed * Time.deltaTime);
-			}
-		
-			if (distanceFromTarget < 0.5f)
-			{
-			//	speed *= 0.9f; // slow down once we're 2.5 units away
 			}
 		
 			if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
