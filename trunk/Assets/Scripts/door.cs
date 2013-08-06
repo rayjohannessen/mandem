@@ -22,7 +22,7 @@ public class door : MonoBehaviour {
 			{
 				foreach (door i in doors)
 				{
-					if ( i != this && i.partner == null)
+					if ( i != this && !i.partner)
 					{
 						// maybe select a partner
 						if(Random.value > 0.5f)

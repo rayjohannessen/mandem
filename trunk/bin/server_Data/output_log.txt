@@ -15,7 +15,7 @@ Platform assembly: C:\Users\Rantaak\Desktop\Writing\ManDem\bin\server_Data\Manag
 Loading C:\Users\Rantaak\Desktop\Writing\ManDem\bin\server_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Users\Rantaak\Desktop\Writing\ManDem\bin\server_Data\Managed\uLink.dll (this message is harmless)
 Loading C:\Users\Rantaak\Desktop\Writing\ManDem\bin\server_Data\Managed\uLink.dll into Unity Child Domain
-- Completed reload, in  0.050 seconds
+- Completed reload, in  0.046 seconds
 desktop: 1680x1050 60Hz; virtual: 1680x1050 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
@@ -33,31 +33,19 @@ This uLink evaluation license is temporary. You will need to purchase a full lic
  
 (Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
 
-Player 1 connected from 127.0.0.1:60416
+Player 1 connected from 127.0.0.1:63988
  
 (Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
 
-Encryption turned on for client 127.0.0.1:60416
+Encryption turned on for client 127.0.0.1:63988
  
 (Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
 
-Encryption turned off for client 127.0.0.1:60416
- 
-(Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
-
-This uLink evaluation license is temporary. You will need to purchase a full license at muchdifferent.com/ulink. If you've bought uLink from the Asset Store, please contact sales@muchdifferent.com to get your license key.
+Encryption turned off for client 127.0.0.1:63988
  
 (Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
 
 Player 1 disconnected 255.255.255.255:0
- 
-(Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
-
-This uLink evaluation license is temporary. You will need to purchase a full license at muchdifferent.com/ulink. If you've bought uLink from the Asset Store, please contact sales@muchdifferent.com to get your license key.
- 
-(Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
-
-This uLink evaluation license is temporary. You will need to purchase a full license at muchdifferent.com/ulink. If you've bought uLink from the Asset Store, please contact sales@muchdifferent.com to get your license key.
  
 (Filename: C:/BuildAgent/work/7535de4ca26c26ac/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 54)
 
