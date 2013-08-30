@@ -4,13 +4,15 @@ using System.Collections;
 public class Chat : uLink.MonoBehaviour 
 {
     bool bChatActive = false;
+    bool textSent = false;
+    bool newTextTyped = false;
 
     public Vector2 vChatSize;
     Vector2 vChatPos;
     public Vector2 vChatOffsetFromBottomLeft;
 
     string strTextToSend;
-    public string strDefaultChatText = "Text to send...";
+    public string strDefaultChatText = "Type to chat...";
 
     Rect chatRect;
 
@@ -28,42 +30,52 @@ public class Chat : uLink.MonoBehaviour
     {
         if (bChatActive)
         {
-            if (Input.GetKeyUp(KeyCode.Return))
-            {
-                // TODO::send any text
-                bChatActive = false;
-                return;
-            }
-            else if (Input.GetKeyUp(KeyCode.Escape))
-            {
-                bChatActive = false;
-                Debug.Log("Chat DEactivated");
-                return;
-            }
         }
-        else if (Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Tab))
+        // make sure enter on send doesn't activate the chat again immediately, i.e. the same frame
+        // that the text is sent. And only bring it up if we're connected to the server
+        //
+        // TODO:: there will be cases where you can't yet chat...
+        //
+        else if (!textSent && (Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Tab)) &&
+                    uLink.Network.status == uLink.NetworkStatus.Connected)
         {
             bChatActive = true;
             Debug.Log("Chat activated");
         }
+        textSent = false;
 	}
 
     void OnGUI()
     {
         if (bChatActive)
         {
-            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return)
+            if (Event.current.type == EventType.KeyDown)
             {
-                Debug.Log("Sending chat text: " + strTextToSend);
-                bChatActive = false;
-                return;
+                // get rid of default text on the first valid key press
+                if (!newTextTyped && Input.inputString.Length > 0 && Input.inputString[0] != '\n')
+                {
+                    newTextTyped = true;
+                    strTextToSend = "";
+                }
             }
-            else if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
+            else if (Event.current.type == EventType.KeyUp)
             {
-                Debug.Log("Chat DEactivated");
-                bChatActive = false;
-                return;
+                // Only send if they've typed something legit
+                if (Event.current.keyCode == KeyCode.Return && newTextTyped)
+                {
+                    Debug.Log("Sending chat text: " + strTextToSend);
+                    textSent = true;
+                    _DeactivateChat();
+                    return;
+                }
+                else if (Event.current.keyCode == KeyCode.Escape)
+                {
+                    _DeactivateChat();
+                    return;
+                }
             }
+
+            GUI.SetNextControlName("ChatText");
 
             GUILayout.BeginArea(chatRect);
             //GUILayout.Box("Chat", GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
@@ -73,6 +85,24 @@ public class Chat : uLink.MonoBehaviour
             }
             GUILayout.EndVertical();
             GUILayout.EndArea();
+
+            if (GUI.GetNameOfFocusedControl() == string.Empty)
+            {
+                GUI.FocusControl("ChatText");
+            }
+            if (strTextToSend.Length == 0)
+            {
+                newTextTyped = false;
+                strTextToSend = strDefaultChatText;
+            }
         }
+    }
+
+    void _DeactivateChat()
+    {
+        newTextTyped = false;
+        bChatActive = false;
+        strTextToSend = strDefaultChatText;
+        Debug.Log("Chat DEactivated");
     }
 }
