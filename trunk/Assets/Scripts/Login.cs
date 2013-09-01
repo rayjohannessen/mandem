@@ -36,10 +36,18 @@ public class Login : uLink.MonoBehaviour
     void uLink_OnDisconnectedFromServer(uLink.NetworkDisconnection _mode)
     {
         Debug.Log("Disconnected from server: " + _mode);
+
+        GameObject.Find("PlayerManager").GetComponent<PlayerManager>().Clear();
     }
     void uLink_OnFailedToConnect(uLink.NetworkConnectionError error)
     {
         Debug.Log("uLink_OnFailedToConnect() - " + error);
+    }
+
+    [RPC]
+    void RemovePlayer(int _id)
+    {
+        GameObject.Find("PlayerManager").GetComponent<PlayerManager>().RemovePlayer(_id);
     }
 
     void OnGUI()

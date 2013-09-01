@@ -67,6 +67,8 @@ public class Server : uLink.MonoBehaviour
     {
         Debug.Log("Player " + player.id + " disconnected " + player.ipAddress + ":" + player.port);
 
+        networkView.RPC("RemovePlayer", uLink.RPCMode.AllExceptOwner, player.id);
+
         uLink.Network.DestroyPlayerObjects(player);
         uLink.Network.RemoveRPCs(player);
         uLink.Network.RemoveInstantiates(player);

@@ -64,6 +64,9 @@ public class Chat : uLink.MonoBehaviour
                 if (Event.current.keyCode == KeyCode.Return && newTextTyped)
                 {
                     Debug.Log("Sending chat text: " + strTextToSend);
+
+                    networkView.RPC("BroadcastChatMessage", uLink.RPCMode.Server, strTextToSend);
+
                     textSent = true;
                     _DeactivateChat();
                     return;
@@ -104,5 +107,30 @@ public class Chat : uLink.MonoBehaviour
         bChatActive = false;
         strTextToSend = strDefaultChatText;
         Debug.Log("Chat DEactivated");
+    }
+
+    [RPC]
+    void ChatMessage(string _message, int _playedID/*, uLink.NetworkMessageInfo _info*/)
+    {
+        Debug.Log("ChatMessage() - received message " + _message + " from player with ID " + _playedID);
+
+        GameObject playerObj = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().GetPlayer(_playedID);
+        if (playerObj)
+        {
+            ChatLabel label = playerObj.GetComponent<ChatLabel>();
+            if (label)
+            {
+                Debug.Log("ChatMessage() - label text set.");
+                label.SetText(_message);
+            }
+            else
+            {
+                Debug.Log("ChatMessage() - label text not set, label == null.");
+            }
+        }
+        else
+        {
+            Debug.Log("GetPlayer() - player with id " + _playedID + " does not exist in dictionary.");            
+        }
     }
 }
