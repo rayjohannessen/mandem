@@ -83,6 +83,18 @@ public class ManorSmoothCharacter : uLink.MonoBehaviour
 		}
 	}
 
+    void uLink_OnNetworkInstantiate(uLink.NetworkMessageInfo _info)
+    {
+        if (uLink.Network.isClient)
+        {
+            int id = _info.networkView.initialData.ReadInt32();
+            GetComponent<PlayerData>().playerID = id;
+            GameObject.Find("PlayerManager").GetComponent<PlayerManager>().AddPlayer(id, gameObject);
+
+            Debug.Log("uLink_OnNetworkInstantiate() for player with ID " + id);
+        }
+    }
+
 	void uLink_OnSerializeNetworkView(uLink.BitStream stream, uLink.NetworkMessageInfo info)
 	{
 		if (stream.isWriting)
