@@ -57,11 +57,11 @@ public class serverCam : MonoBehaviour {
 			targetPos -= currentPlayer.transform.forward * followDistance;
 			targetPos += currentPlayer.transform.up * cameraHeight;
 		
-			transform.position += (targetPos - transform.position) * Time.deltaTime;
+			transform.position += (targetPos - transform.position) * Time.deltaTime * 0.5f;
 			
 			targetRot = Quaternion.LookRotation((currentPlayer.transform.position + (currentPlayer.transform.forward * cameraLead)) - transform.position);
 			
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime);			
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 2.5f);			
 		}
 			
 	}
