@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class door : MonoBehaviour {
+public class door : uLink.MonoBehaviour {
 	public door partner;
 	
 	public GameObject player;
@@ -70,4 +70,13 @@ public class door : MonoBehaviour {
         player = _player;
         m_Control = player.GetComponent<control>();
     }
+	
+	[RPC]
+	void DoorPartnerships(door a, door b)
+	{
+		if (a.GetInstanceID() == GetInstanceID())
+		{
+			partner = b;	
+		}
+	}
 }
