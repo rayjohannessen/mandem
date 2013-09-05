@@ -95,6 +95,24 @@ ModelImporter:
     4300030: pCube16
     4300032: pCube17
     4300034: pCube18
+    6400000: pCube1
+    6400002: pCube10
+    6400004: pCube11
+    6400006: pCube12
+    6400008: pCube13
+    6400010: pCube14
+    6400012: pCube15
+    6400014: pCube16
+    6400016: pCube17
+    6400018: pCube18
+    6400020: pCube2
+    6400022: pCube3
+    6400024: pCube4
+    6400026: pCube5
+    6400028: pCube6
+    6400030: pCube7
+    6400032: pCube8
+    6400034: pCube9
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -117,7 +135,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     weldVertices: 1
