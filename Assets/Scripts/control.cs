@@ -84,12 +84,16 @@ public class control : MonoBehaviour {
 				{
 	
 					
-					if (oinfo.collider.name.Substring(0, 4) == "door") // if we click on a door, make sure to head to the position of the door.
+					if (oinfo.collider.name.Substring(0, 4) == "door") // only click on the door if its facing toward us.  Otherwise ignore it.
 					{
-						target = oinfo.collider.gameObject.transform.position;
-						target.y = controller.transform.position.y;
+						
+						if (Vector3.Dot(oinfo.collider.gameObject.transform.forward, Camera.main.transform.forward) < 0.0f)
+						{
+							target = oinfo.collider.gameObject.transform.position;
+							target.y = controller.transform.position.y;
+						}
 					}
-					else
+					else if (oinfo.collider.name == "ground")
 					{
 			        	target = ray.GetPoint(oinfo.distance); // set our destination to wherever on the ground the mouse has been clicked
 						target.y = controller.transform.position.y;					
