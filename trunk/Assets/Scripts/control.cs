@@ -30,11 +30,12 @@ public class control : MonoBehaviour {
 	
 	public void Teleport (Vector3 tov, Vector3 toq)
 	{
-		//rigidbody.velocity = Vector3.zero; // reverse force
 		controller.transform.position = tov;
 		controller.transform.rotation = Quaternion.LookRotation(toq);
-		//rigidbody.velocity = transform.forward * 2.0f; // apply force
-		state = "idle";
+		
+		//state = "idle";
+		
+		target = tov + (controller.transform.forward * 3.0f);// walk three feet
 	}
 	
 	void OnControllerColliderHit(ControllerColliderHit other)
