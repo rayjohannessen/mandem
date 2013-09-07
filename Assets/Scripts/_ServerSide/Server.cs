@@ -67,6 +67,8 @@ public class Server : uLink.MonoBehaviour
     {
         Debug.Log("Player " + player.id + " disconnected " + player.ipAddress + ":" + player.port);
 
+        GameObject.Find("MatchManager").GetComponent<MatchManager_Server>().PlayerLoggedOut(player);
+
         networkView.RPC("RemovePlayer", uLink.RPCMode.AllExceptOwner, player.id);
 		
         uLink.Network.DestroyPlayerObjects(player);

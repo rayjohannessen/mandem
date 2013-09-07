@@ -10,6 +10,8 @@ public class control : MonoBehaviour {
 	CharacterController controller;
 	
 	CameraLook p_camScript;
+
+    MatchManager matchMngr;
 	
 	// Use this for initialization
 	void Start () {
@@ -26,6 +28,7 @@ public class control : MonoBehaviour {
         }
 		
 		controller = GetComponent<CharacterController>();
+        matchMngr = GameObject.Find("MatchManager").GetComponent<MatchManager>();
 	}
 	
 	public void Teleport (Vector3 tov, Vector3 toq)
@@ -65,10 +68,12 @@ public class control : MonoBehaviour {
 		}
 	}
 	
-	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () 
+    {
+        if (!matchMngr.matchStarted)
+            return;
+
 		//data we need
 		Vector3 up = new Vector3(0,1,0);
 		Plane plane = new Plane(up, 0); 
@@ -79,14 +84,11 @@ public class control : MonoBehaviour {
 		if(Input.GetMouseButton(1))
 		{
 			//if (state == "idle") // only set a new destination if we found the old one
-				{
+			{
 			    if(Physics.Raycast(ray, out oinfo))
 				{
-	
-					
 					if (oinfo.collider.name.Substring(0, 4) == "door") // only click on the door if its facing toward us.  Otherwise ignore it.
 					{
-						
 						if (Vector3.Dot(oinfo.collider.gameObject.transform.forward, Camera.main.transform.forward) < 0.0f)
 						{
 							target = oinfo.collider.gameObject.transform.position;
@@ -104,7 +106,6 @@ public class control : MonoBehaviour {
 					state = "seeking";
 			    }
 			}
-		
 		}
 		else if (Input.GetMouseButton (0))
 		{
@@ -112,19 +113,17 @@ public class control : MonoBehaviour {
 			controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * mouseturnspeed);
 			state = "idle";
 		}
-		
 
-			float distanceFromTarget = Vector3.Distance(controller.transform.position, target);
-		
-			if (state == "seeking")
-			{
-				controller.Move(controller.transform.forward * speed * Time.deltaTime);
-			}
-		
-			if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
-			{
-				state = "idle";	// stop seeking a new position once we break epsilon of .01
-			}
-		
+		float distanceFromTarget = Vector3.Distance(controller.transform.position, target);
+	
+		if (state == "seeking")
+		{
+			controller.Move(controller.transform.forward * speed * Time.deltaTime);
+		}
+	
+		if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
+		{
+			state = "idle";	// stop seeking a new position once we break epsilon of .01
+		}
 	}
 }

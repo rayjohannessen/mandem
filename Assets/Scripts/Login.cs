@@ -16,20 +16,19 @@ public class Login : uLink.MonoBehaviour
     public float panelHeight = 200;
     Rect panelRect;
 
+    MatchManager matchMngr;
+
     void Start()
     {
         float panelPosX = Screen.width / 2 - panelWidth / 2;
         float panelPosY = Screen.height / 2 - panelHeight / 2;
         panelRect = new Rect(panelPosX, panelPosY, panelWidth, panelHeight);
+        matchMngr = GameObject.Find("MatchManager").GetComponent<MatchManager>();
     }
 
     // Connection
     void uLink_OnConnectedToServer()
     {
-        //
-        // TODO::we'll go to some sort of lobby where matchmaking occurs in the real game..
-        //
-
         Debug.Log("Now connected to server with username: " + user);
         Debug.Log("Local Port = " + uLink.Network.listenPort);
     }
@@ -38,6 +37,7 @@ public class Login : uLink.MonoBehaviour
         Debug.Log("Disconnected from server: " + _mode);
 
         GameObject.Find("PlayerManager").GetComponent<PlayerManager>().Clear();
+        GameObject.Find("MatchManager").GetComponent<MatchManager>().OnLogout();
     }
     void uLink_OnFailedToConnect(uLink.NetworkConnectionError error)
     {
@@ -104,6 +104,22 @@ public class Login : uLink.MonoBehaviour
                 }
             }
             GUILayout.EndArea();
+
+            if (!matchMngr.matchStarted && !matchMngr.waitingForPlayers && !matchMngr.matchStarting)
+            {
+	            GUILayout.BeginArea(new Rect(10, 45, 75, 40));
+	            {
+	                //
+	                // TODO::we'll go to some sort of lobby where matchmaking occurs in the real game..
+	                //  for now we just try to join to a match by pressing this button
+	                //
+	                if (GUILayout.Button("Join Match"))
+	                {
+	                    matchMngr.RequestJoinMatch();
+	                }
+	            }
+	            GUILayout.EndArea();
+            }
         }
     }
 }
