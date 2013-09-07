@@ -12,6 +12,5 @@ public class SpawnPrefabs : uLink.MonoBehaviour
     public void SpawnPlayer(uLink.NetworkPlayer _player)
     {
         uLink.Network.Instantiate(_player, charProxyPrefab, charOwnerPrefab, charCreatorPrefab, spawnLocation.transform.position, spawnLocation.transform.rotation, 0, _player.id);
-		GetComponent<Control_Server>().bDoors(); // broadcast the doors to everyone every time someone logs in.
 	}
 }
