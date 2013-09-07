@@ -71,12 +71,4 @@ public class door : uLink.MonoBehaviour {
         m_Control = player.GetComponent<control>();
     }
 	
-	[RPC]
-	void DoorPartnerships(door a, door b)
-	{
-		if (a.GetInstanceID() == GetInstanceID())
-		{
-			partner = b;	
-		}
-	}
 }
