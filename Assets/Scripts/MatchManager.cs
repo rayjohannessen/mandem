@@ -13,6 +13,8 @@ public class MatchManager : uLink.MonoBehaviour
 
     public float coundownSeconds;
     float matchStartCounter;
+	
+	float messageCounter;
 
     public GUIText centerMsgGUI;
 	
@@ -21,7 +23,17 @@ public class MatchManager : uLink.MonoBehaviour
 	void Start () 
     {
         centerMsgGUI.enabled = false;	
-		playerData = GameObject.Find("Player_Owner").GetComponent<PlayerData>();
+		messageCounter = 0.0f;
+	}
+	
+	void ShowMessage(string msg)
+	{
+		if (centerMsgGUI)
+		{
+		centerMsgGUI.text = msg;
+		messageCounter = (float)(msg.Length);
+		centerMsgGUI.enabled = true;
+		}
 	}
 	
 	void Update () 
@@ -40,7 +52,15 @@ public class MatchManager : uLink.MonoBehaviour
             }
             if (centerMsgGUI)
                 centerMsgGUI.text = ((int)matchStartCounter).ToString();
-	    }	    
+	    }
+		else if (messageCounter > 0.0f)
+		{
+			messageCounter -= Time.deltaTime;
+		}
+		else
+		{
+			centerMsgGUI.enabled = false;	
+		}
 	}
 
     /// <summary>
@@ -107,6 +127,7 @@ public class MatchManager : uLink.MonoBehaviour
     [RPC]
     void StartMatch()
     {
+		playerData = GameObject.Find("Player_Owner(Clone)").GetComponent<PlayerData>();
         waitingForPlayers = false;
         matchStarting = true;
         matchStartCounter = coundownSeconds;
@@ -119,9 +140,19 @@ public class MatchManager : uLink.MonoBehaviour
     }
 	
 	[RPC]
-	void AlertMurderer()
+	void AlertMurderer(bool isKiller)
 	{
-		// check playerData.job and react accordingly.
+		if (isKiller)
+		{
+			playerData.job = "Killer";
+			ShowMessage ("Mundus Vult Decipiatur Ergo Interficere");
+		}
+		else
+		{
+			playerData.job = "Human";
+			ShowMessage ("Quaerendo Invenietis");
+		}
+			Debug.Log("Player " + playerData.playerID + "is a " + playerData.job);
 	}
 
     public void OnLogout()

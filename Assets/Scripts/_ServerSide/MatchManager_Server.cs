@@ -30,6 +30,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
 	public float seconds_to_midnight = 23.0f;
 	float matchTimer = 0.0f;
 	bool midnight = false;
+	bool matchStarted = false;
 
 	void Start () 
     {
@@ -41,19 +42,28 @@ public class MatchManager_Server : uLink.MonoBehaviour
 
     void Update()
     {
-		matchTimer += Time.deltaTime;
-		if (!midnight)
+		if (matchStarted)
 		{
-			if (matchTimer >= seconds_to_midnight)
+			matchTimer += Time.deltaTime;
+			if (!midnight)
 			{
-				midnight = true;
-				
-				// Tell all the players ALERTTTTTT
-        		foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
-        		{
-        		    networkView.RPC("AlertMurderer", player.Key);
-        		}
-				
+				if (matchTimer >= seconds_to_midnight)
+				{
+					midnight = true;
+	            	Debug.Log("IT IS MIDNIGHT");
+					
+					// Tell all the players ALERTTTTTT
+	        		foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
+	        		{
+	        		    networkView.RPC("AlertMurderer", player.Key, player.Value.isKiller);
+						
+						if (player.Value.isKiller)
+							Debug.Log ("Player" + player.Key + "is the muderer");
+						else
+							Debug.Log ("Player" + player.Key + "is human.");
+	        		}
+					
+				}
 			}
 		}
 		
@@ -170,5 +180,6 @@ public class MatchManager_Server : uLink.MonoBehaviour
         }
 		matchTimer = 0.0f;
 		midnight = false;
+		matchStarted = true;
     }
 }
