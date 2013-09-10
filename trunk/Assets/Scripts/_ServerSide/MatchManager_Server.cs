@@ -20,17 +20,24 @@ public class MatchManager_Server : uLink.MonoBehaviour
     // Ready means:
     // - the player has notified this manager that it has received the door connections
     // - 
-    Dictionary<uLink.NetworkPlayer, bool> players;
+    Dictionary<uLink.NetworkPlayer, Player_Server> players;
+
+    bool killerAssigned = false;
 
     door[] doors;
 
 	void Start () 
     {
-        players = new Dictionary<uLink.NetworkPlayer, bool>();
+        players = new Dictionary<uLink.NetworkPlayer, Player_Server>();
 
         // TEMP:: generate connections at the start of every new match
         GenerateDoorConnections();
 	}
+
+    void Update()
+    {
+
+    }
 	
     /// <summary>
     /// This function can handle any verification that might need to be done
@@ -43,8 +50,24 @@ public class MatchManager_Server : uLink.MonoBehaviour
         {
             Debug.Log("RequestToJoinMatch() - from player with id " + _info.sender.id);
 
-            players.Add(_info.sender, false);
+            bool isKiller = false;
+
+            // if this is the last player to join and we still don't have a killer, he's it
+            if (!killerAssigned && players.Count == numReqPlayers-1)
+            {
+                isKiller = true;
+                killerAssigned = isKiller;
+            }
+            else if (!killerAssigned)
+            {
+                // TODO:: how to pick killer?? completely random?
+                isKiller = UnityEngine.Random.Range(0, 100) > 50;
+	            killerAssigned = isKiller;
+            }
+
+            players.Add(_info.sender, new Player_Server(isKiller));
         
+            // setup the stream to send all the door connections back through to the client
             bool isTypeSafe = ((uLink.Network.defaultRPCFlags & uLink.NetworkFlags.TypeUnsafe) == 0);
             uLink.BitStream stream = new uLink.BitStream(isTypeSafe);
 
@@ -59,6 +82,13 @@ public class MatchManager_Server : uLink.MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The client calls this to notify the server that he's ready to start
+    /// He has all the door connection info (and anything else necessary to start a match).
+    /// 
+    /// If the server sees that everyone is ready it starts the match, otherwise it does nothing.
+    /// </summary>
+    /// <param name="_info"></param>
     [RPC]
     void NotifyReady(uLink.NetworkMessageInfo _info)
     {
@@ -66,15 +96,15 @@ public class MatchManager_Server : uLink.MonoBehaviour
         {
             Debug.Log("NotifyReady() - from player with id " + _info.sender.id + "...waiting for " + (numReqPlayers-players.Count).ToString() + " more player(s) to join");
 
-            players[_info.sender] = true;
+            players[_info.sender].state = Player_Server.ePlayerstate.PS_READY_AND_WAITING;
 
             // TODO::in the end we'd need a timeout value if some players take too long
             //      to send this notification
             if (numReqPlayers == players.Count)
             {
-	            foreach (KeyValuePair<uLink.NetworkPlayer, bool> p in players)
+	            foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> p in players)
 	            {
-	                if (!p.Value)
+	                if (p.Value.state != Player_Server.ePlayerstate.PS_READY_AND_WAITING)
 	                {
 	                    // a player isn't yet ready, no need to go any further
 	                    return;
@@ -100,6 +130,11 @@ public class MatchManager_Server : uLink.MonoBehaviour
         if (players.ContainsKey(_player))
         {
             players.Remove(_player);
+
+            if (players.Count == 0)
+            {
+                killerAssigned = false;
+            }
         }
     }
 
@@ -108,9 +143,10 @@ public class MatchManager_Server : uLink.MonoBehaviour
         Debug.Log("Starting match...sending StartMatch to " + players.Count + " players in match.");
 
         // Tell all the players to start the match
-        foreach (KeyValuePair<uLink.NetworkPlayer, bool> player in players)
+        foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
         {
             networkView.RPC("StartMatch", player.Key);
+            player.Value.state = Player_Server.ePlayerstate.PS_IN_MATCH;
         }
     }
 }
