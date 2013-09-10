@@ -15,10 +15,13 @@ public class MatchManager : uLink.MonoBehaviour
     float matchStartCounter;
 
     public GUIText centerMsgGUI;
+	
+	PlayerData playerData;
 
 	void Start () 
     {
         centerMsgGUI.enabled = false;	
+		playerData = GameObject.Find("Player_Owner").GetComponent<PlayerData>();
 	}
 	
 	void Update () 
@@ -114,6 +117,12 @@ public class MatchManager : uLink.MonoBehaviour
         }
         Debug.Log("Match Starting!!");
     }
+	
+	[RPC]
+	void AlertMurderer()
+	{
+		// check playerData.job and react accordingly.
+	}
 
     public void OnLogout()
     {
