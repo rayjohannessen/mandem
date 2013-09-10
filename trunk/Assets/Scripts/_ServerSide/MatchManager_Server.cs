@@ -25,6 +25,11 @@ public class MatchManager_Server : uLink.MonoBehaviour
     bool killerAssigned = false;
 
     door[] doors;
+	
+	public float match_length = 93.0f;
+	public float seconds_to_midnight = 23.0f;
+	float matchTimer = 0.0f;
+	bool midnight = false;
 
 	void Start () 
     {
@@ -36,7 +41,22 @@ public class MatchManager_Server : uLink.MonoBehaviour
 
     void Update()
     {
-
+		matchTimer += Time.deltaTime;
+		if (!midnight)
+		{
+			if (matchTimer >= seconds_to_midnight)
+			{
+				midnight = true;
+				
+				// Tell all the players ALERTTTTTT
+        		foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
+        		{
+        		    networkView.RPC("AlertMurderer", player.Key);
+        		}
+				
+			}
+		}
+		
     }
 	
     /// <summary>
@@ -148,5 +168,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
             networkView.RPC("StartMatch", player.Key);
             player.Value.state = Player_Server.ePlayerstate.PS_IN_MATCH;
         }
+		matchTimer = 0.0f;
+		midnight = false;
     }
 }
