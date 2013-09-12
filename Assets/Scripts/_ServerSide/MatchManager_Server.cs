@@ -20,7 +20,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
     // Ready means:
     // - the player has notified this manager that it has received the door connections
     // - 
-    Dictionary<uLink.NetworkPlayer, Player_Server> players;
+    Dictionary<uLink.NetworkPlayer, PlayerData_Server> players;
 
     bool killerAssigned = false;
 
@@ -34,7 +34,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
 
 	void Start () 
     {
-        players = new Dictionary<uLink.NetworkPlayer, Player_Server>();
+        players = new Dictionary<uLink.NetworkPlayer, PlayerData_Server>();
 
         // TEMP:: generate connections at the start of every new match
         GenerateDoorConnections();
@@ -53,12 +53,12 @@ public class MatchManager_Server : uLink.MonoBehaviour
 	            	Debug.Log("IT IS MIDNIGHT");
 					
 					// Tell all the players ALERTTTTTT
-	        		foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
+	        		foreach (KeyValuePair<uLink.NetworkPlayer, PlayerData_Server> player in players)
 	        		{
 	        		    networkView.RPC("AlertMurderer", player.Key, player.Value.isKiller);
 						
 						if (player.Value.isKiller)
-							Debug.Log ("Player" + player.Key + "is the muderer");
+							Debug.Log ("Player" + player.Key + "is the murderer");
 						else
 							Debug.Log ("Player" + player.Key + "is human.");
 	        		}
@@ -95,7 +95,11 @@ public class MatchManager_Server : uLink.MonoBehaviour
 	            killerAssigned = isKiller;
             }
 
-            players.Add(_info.sender, new Player_Server(isKiller));
+            players.Add(_info.sender, new PlayerData_Server(isKiller));
+
+            // Find the player_owner GameObject so we can set it's worldinteraction_server's PlayerData_Server reference
+            GameObject player = GameObject.Find(_info.sender.id.ToString());
+            player.GetComponent<WorldInteraction_Server>().playerData = players[_info.sender];
         
             // setup the stream to send all the door connections back through to the client
             bool isTypeSafe = ((uLink.Network.defaultRPCFlags & uLink.NetworkFlags.TypeUnsafe) == 0);
@@ -126,15 +130,15 @@ public class MatchManager_Server : uLink.MonoBehaviour
         {
             Debug.Log("NotifyReady() - from player with id " + _info.sender.id + "...waiting for " + (numReqPlayers-players.Count).ToString() + " more player(s) to join");
 
-            players[_info.sender].state = Player_Server.ePlayerstate.PS_READY_AND_WAITING;
+            players[_info.sender].state = PlayerData_Server.ePlayerstate.PS_READY_AND_WAITING;
 
             // TODO::in the end we'd need a timeout value if some players take too long
             //      to send this notification
             if (numReqPlayers == players.Count)
             {
-	            foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> p in players)
+	            foreach (KeyValuePair<uLink.NetworkPlayer, PlayerData_Server> p in players)
 	            {
-	                if (p.Value.state != Player_Server.ePlayerstate.PS_READY_AND_WAITING)
+	                if (p.Value.state != PlayerData_Server.ePlayerstate.PS_READY_AND_WAITING)
 	                {
 	                    // a player isn't yet ready, no need to go any further
 	                    return;
@@ -173,10 +177,10 @@ public class MatchManager_Server : uLink.MonoBehaviour
         Debug.Log("Starting match...sending StartMatch to " + players.Count + " players in match.");
 
         // Tell all the players to start the match
-        foreach (KeyValuePair<uLink.NetworkPlayer, Player_Server> player in players)
+        foreach (KeyValuePair<uLink.NetworkPlayer, PlayerData_Server> player in players)
         {
             networkView.RPC("StartMatch", player.Key);
-            player.Value.state = Player_Server.ePlayerstate.PS_IN_MATCH;
+            player.Value.state = PlayerData_Server.ePlayerstate.PS_IN_MATCH;
         }
 		matchTimer = 0.0f;
 		midnight = false;

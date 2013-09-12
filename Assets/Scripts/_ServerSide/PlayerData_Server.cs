@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Player_Server
+public class PlayerData_Server
 {
     public enum ePlayerstate { PS_WAITING, PS_READY_AND_WAITING, PS_IN_MATCH, NUM_PLAYER_STATES }
 
@@ -9,9 +10,13 @@ public class Player_Server
 
     public bool isKiller;
 
-    public Player_Server(bool _isKiller)
+    public List<Item> items;
+
+    public PlayerData_Server(bool _isKiller)
     {
         state = ePlayerstate.PS_WAITING;
         isKiller = _isKiller;
+
+        items = new List<Item>();
     }
 }

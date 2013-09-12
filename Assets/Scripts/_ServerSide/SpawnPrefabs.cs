@@ -11,6 +11,8 @@ public class SpawnPrefabs : uLink.MonoBehaviour
 
     public void SpawnPlayer(uLink.NetworkPlayer _player)
     {
-        uLink.Network.Instantiate(_player, charProxyPrefab, charOwnerPrefab, charCreatorPrefab, spawnLocation.transform.position, spawnLocation.transform.rotation, 0, _player.id);
+        GameObject player = uLink.Network.Instantiate(_player, charProxyPrefab, charOwnerPrefab, charCreatorPrefab, spawnLocation.transform.position, spawnLocation.transform.rotation, 0, _player.id);
+        // make it real simple to find the player object, use their playerID:
+        player.name = _player.id.ToString();
 	}
 }
