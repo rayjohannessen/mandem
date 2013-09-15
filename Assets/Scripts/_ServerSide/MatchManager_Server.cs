@@ -65,6 +65,15 @@ public class MatchManager_Server : uLink.MonoBehaviour
 					
 				}
 			}
+			else
+			{
+				if (matchTimer >= match_length)
+				{
+					// end match on server and alert all players
+					
+					matchStarted = false;
+				}
+			}
 		}
 		
     }
@@ -91,7 +100,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
             else if (!killerAssigned)
             {
                 // TODO:: how to pick killer?? completely random?
-                isKiller = UnityEngine.Random.Range(0, 100) > 50;
+                isKiller = UnityEngine.Random.Range(0, numReqPlayers) == 0; // we have a "One in PlayerCount" chance
 	            killerAssigned = isKiller;
             }
 

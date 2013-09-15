@@ -143,6 +143,7 @@ public class ManorSmoothCharacter : uLink.MonoBehaviour
 		{
 			targetDir = offset / targetDistance;
 		}
+		
 	}
 
 	void SendToServer()
@@ -172,7 +173,7 @@ public class ManorSmoothCharacter : uLink.MonoBehaviour
 
 		float speed = (targetDistance > arrivalDistance) ? maxSpeed : arrivalSpeed * targetDistance;
 
-		velocity = speed * targetDir; 
+		velocity = speed * targetDir;
 		
 		if (moveCharacter)
 		{
