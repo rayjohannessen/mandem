@@ -26,7 +26,7 @@ public class MatchManager : uLink.MonoBehaviour
 		messageCounter = 0.0f;
 	}
 	
-	void ShowMessage(string msg)
+	public void ShowMessage(string msg)
 	{
 		if (centerMsgGUI)
 		{

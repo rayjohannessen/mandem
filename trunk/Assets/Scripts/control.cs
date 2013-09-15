@@ -69,7 +69,7 @@ public class control : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
     {
         if (!matchMngr.matchStarted)
             return;
@@ -87,23 +87,39 @@ public class control : MonoBehaviour {
 			{
 			    if(Physics.Raycast(ray, out oinfo))
 				{
-					if (oinfo.collider.name.Substring(0, 4) == "door") // only click on the door if its facing toward us.  Otherwise ignore it.
+					bool validtarget = false;
+					
+					if (oinfo.collider.name == "ground")
+					{
+			        	target = ray.GetPoint(oinfo.distance); // set our destination to wherever on the ground the mouse has been clicked
+						target.y = controller.transform.position.y;	
+						validtarget = true;
+					}
+					else if (oinfo.collider.gameObject.tag == "Player")
+					{
+							target = oinfo.collider.gameObject.transform.position;
+							validtarget = true;
+					}
+					else if (oinfo.collider.name == "wall")
+					{
+						return;	
+					}
+					else if (oinfo.collider.name.Substring(0, 4) == "door") // only click on the door if its facing toward us.  Otherwise ignore it.
 					{
 						if (Vector3.Dot(oinfo.collider.gameObject.transform.forward, Camera.main.transform.forward) < 0.0f)
 						{
+							validtarget = true;
 							target = oinfo.collider.gameObject.transform.position;
 							target.y = controller.transform.position.y;
 						}
 					}
-					else if (oinfo.collider.name == "ground")
-					{
-			        	target = ray.GetPoint(oinfo.distance); // set our destination to wherever on the ground the mouse has been clicked
-						target.y = controller.transform.position.y;					
-					}
 					
-					speed = 15.0f;
-					controller.transform.LookAt(target);
-					state = "seeking";
+					if (validtarget)
+					{
+						speed = 15.0f;
+						controller.transform.LookAt(target);
+						state = "seeking";
+					}
 			    }
 			}
 		}

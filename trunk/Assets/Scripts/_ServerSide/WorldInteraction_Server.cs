@@ -21,10 +21,22 @@ public class WorldInteraction_Server : uLink.MonoBehaviour
     //      have to add a collider for that though...
 	void OnControllerColliderHit(ControllerColliderHit other)
     {
-
+        Debug.Log("OnControllerColliderHit()");
+		Debug.Log (name + " collided with " + other.gameObject.name);
+		if (other.gameObject.tag == "Player")
+		{
+	        PlayerData_Server pd = other.gameObject.GetComponent<WorldInteraction_Server>().playerData;
+	        if (pd.isKiller)
+	        {
+	            Debug.Log(" - player " + name + " collided with " + other.gameObject.name);
+				
+	           // RPC something to client...
+	            networkView.RPC("Collided", networkView.owner);
+	        }
+		}
     }
-
-    void OnCollisionEnter(Collision _collision)
+	
+  /*  void OnCollisionEnter(Collision _collision)
     {
         Debug.Log("OnCollisionEnter()");
 
@@ -35,8 +47,10 @@ public class WorldInteraction_Server : uLink.MonoBehaviour
 
            // RPC something to client...
             networkView.RPC("Collided", networkView.owner);
+			
         }
     }
+    
 
     void OnCollisionStay(Collision _collision)
     {
@@ -47,4 +61,6 @@ public class WorldInteraction_Server : uLink.MonoBehaviour
     {
 
     }
+    
+    */
 }
