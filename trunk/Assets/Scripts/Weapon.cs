@@ -7,9 +7,9 @@ public class Weapon : Item
 
     public eWeaponType weaponType;
 
-    public void SetProperties(eItemType _itemType, int _id, eWeaponType _weaponType)
+    public void SetProperties(int _id, eWeaponType _weaponType)
     {
-        base.SetBaseProperties(_itemType, _id);
+        base.SetBaseProperties(Item.eItemType.IT_WEAPON, _id);
 
         weaponType = _weaponType;
     }

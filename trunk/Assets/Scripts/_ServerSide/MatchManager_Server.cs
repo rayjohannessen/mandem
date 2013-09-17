@@ -22,6 +22,8 @@ public class MatchManager_Server : uLink.MonoBehaviour
     // - 
     Dictionary<uLink.NetworkPlayer, PlayerData_Server> players;
 
+    List<GameObject> itemsInWorld;
+
     bool killerAssigned = false;
 
     door[] doors;
@@ -36,8 +38,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
     {
         players = new Dictionary<uLink.NetworkPlayer, PlayerData_Server>();
 
-        // TEMP:: generate connections at the start of every new match
-        GenerateDoorConnections();
+        GenerateRoomInfo();
 	}
 
     void Update()
@@ -77,6 +78,12 @@ public class MatchManager_Server : uLink.MonoBehaviour
 		}
 		
     }
+
+    public void GenerateRoomInfo()
+    {
+        _GenerateItems();
+        _GenerateDoorConnections();
+    }
 	
     /// <summary>
     /// This function can handle any verification that might need to be done
@@ -114,11 +121,19 @@ public class MatchManager_Server : uLink.MonoBehaviour
             bool isTypeSafe = ((uLink.Network.defaultRPCFlags & uLink.NetworkFlags.TypeUnsafe) == 0);
             uLink.BitStream stream = new uLink.BitStream(isTypeSafe);
 
+            // doors
             stream.WriteInt16((short)doors.Length);
             foreach (door d in doors)
             {
                 stream.WriteString(d.name);
                 stream.WriteString(d.partner.name);
+            }
+
+            // items
+            foreach (GameObject item in itemsInWorld)
+            {
+                // TODO::add info to stream
+
             }
 
             networkView.RPC("JoinResponse", _info.sender, true, stream);
@@ -158,7 +173,31 @@ public class MatchManager_Server : uLink.MonoBehaviour
         }
     }
 
-    public void GenerateDoorConnections()
+    void _GenerateItems()
+    {
+        itemsInWorld = new List<GameObject>();
+        Item.eItemType val;
+        GameObject[] itemLocations = GameObject.FindGameObjectsWithTag("itemSpawn");
+
+        foreach (GameObject loc in itemLocations)
+        {
+            val = Item.eItemType.IT_WEAPON;// (Item.eItemType)UnityEngine.Random.Range(0, (int)Item.eItemType.NUM_ITEM_TYPES);
+            switch (val)
+            {
+                case Item.eItemType.IT_WEAPON:
+                    {
+                        // todo :: weapon name that's appropriate?
+                        GameObject newObj = new GameObject("weapon");
+                        newObj.transform.position = loc.transform.position;
+                        newObj.AddComponent<Weapon>();
+                        itemsInWorld.Add(newObj);
+                        break;
+                    }
+            }
+        }
+    }
+
+    void _GenerateDoorConnections()
     {
         doors = FindObjectsOfType(typeof(door)) as door[];
         foreach (door d in doors)
