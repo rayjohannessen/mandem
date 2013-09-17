@@ -69,7 +69,7 @@ public class control : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () 
+	void Update () 
     {
         if (!matchMngr.matchStarted)
             return;
@@ -134,7 +134,7 @@ public class control : MonoBehaviour {
 	
 		if (state == "seeking")
 		{
-			controller.Move(controller.transform.forward * speed * Time.deltaTime);
+			controller.SimpleMove(controller.transform.forward * speed); // no DT for simplemove?
 		}
 	
 		if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)

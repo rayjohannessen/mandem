@@ -177,7 +177,7 @@ public class ManorSmoothCharacter : uLink.MonoBehaviour
 		
 		if (moveCharacter)
 		{
-			character.Move(velocity);
+			character.SimpleMove(velocity);
 			
 			targetDistance -= speed * Time.deltaTime;
 		}
