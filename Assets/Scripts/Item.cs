@@ -9,10 +9,13 @@ public class Item : MonoBehaviour
 
     public int id;
 
-    public void SetBaseProperties(eItemType _type, int _id)
+    public bool onGround;
+
+    public void SetBaseProperties(eItemType _type, int _id, bool _onGround = true)
     {
         itemType = _type;
         id = _id;
+        onGround = _onGround;
     }
 
 	void Start () 
