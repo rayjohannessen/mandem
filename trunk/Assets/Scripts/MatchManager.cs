@@ -113,7 +113,23 @@ public class MatchManager : uLink.MonoBehaviour
                     doorsDict[currDoor].partner = doorsDict[partnerDoor];
             }
 
-            Debug.Log("JoinResponse() - Received partner info for " + numDoors + " doors. Server said go ahead and start the match. Sending notification we're ready.");
+            ItemFactory itemFactory = GameObject.Find("ItemFactory").GetComponent<ItemFactory>();
+
+            short numItems = _stream.ReadInt16();
+            Vector3 pos;
+            int subType, id;
+            Item.eItemType itemType;
+            for (short i = 0; i < numItems; ++i)
+            {
+                itemType = (Item.eItemType)_stream.ReadInt16();
+                subType = _stream.ReadInt16();
+                id = _stream.ReadInt32();
+                pos = _stream.ReadVector3();
+
+                itemFactory.GenerateItem(itemType, pos, Quaternion.identity, subType, id);
+            }
+
+            Debug.Log("JoinResponse() - Received partner info for " + numDoors + " doors and " + numItems + " items. Server said go ahead and start the match. Sending notification we're ready.");
 
             // we're good to go, let the server know
             networkView.RPC("NotifyReady", uLink.RPCMode.Server);

@@ -16,11 +16,19 @@ public class Weapon : Item
 
 	void Start () 
     {
-	
+        physicalObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        physicalObj.transform.position = transform.position;
+        physicalObj.transform.parent = gameObject.transform;
+        physicalObj.collider.isTrigger = true;
 	}
 	
 	void Update () 
     {
 	
 	}
+
+    public override short GetSubtype()
+    {
+        return (short)weaponType;
+    }
 }

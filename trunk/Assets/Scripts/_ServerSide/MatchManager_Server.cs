@@ -130,10 +130,18 @@ public class MatchManager_Server : uLink.MonoBehaviour
             }
 
             // items
+            Item i;
+            stream.WriteInt16((short)itemsInWorld.Count);
             foreach (GameObject item in itemsInWorld)
             {
                 // TODO::add info to stream
+                i = item.GetComponent<Item>();
+                Debug.Log("Item is type " + i.itemType);
 
+                stream.WriteInt16((short)i.itemType);
+                stream.WriteInt16(i.GetSubtype());
+                stream.WriteInt32(i.id);
+                stream.WriteVector3(item.transform.position);
             }
 
             networkView.RPC("JoinResponse", _info.sender, true, stream);
@@ -176,24 +184,12 @@ public class MatchManager_Server : uLink.MonoBehaviour
     void _GenerateItems()
     {
         itemsInWorld = new List<GameObject>();
-        Item.eItemType val;
         GameObject[] itemLocations = GameObject.FindGameObjectsWithTag("itemSpawn");
+        ItemFactory itemFactory = GameObject.Find("ItemFactory").GetComponent<ItemFactory>();
 
         foreach (GameObject loc in itemLocations)
         {
-            val = Item.eItemType.IT_WEAPON;// (Item.eItemType)UnityEngine.Random.Range(0, (int)Item.eItemType.NUM_ITEM_TYPES);
-            switch (val)
-            {
-                case Item.eItemType.IT_WEAPON:
-                    {
-                        // todo :: weapon name that's appropriate?
-                        GameObject newObj = new GameObject("weapon");
-                        newObj.transform.position = loc.transform.position;
-                        newObj.AddComponent<Weapon>();
-                        itemsInWorld.Add(newObj);
-                        break;
-                    }
-            }
+            itemsInWorld.Add(itemFactory.GenerateRandomObject(loc.transform.position, loc.transform.rotation));            
         }
     }
 
