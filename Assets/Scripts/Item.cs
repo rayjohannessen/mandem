@@ -11,6 +11,8 @@ public class Item : MonoBehaviour
 
     public bool onGround;
 
+    public GameObject physicalObj;
+
     public void SetBaseProperties(eItemType _type, int _id, bool _onGround = true)
     {
         itemType = _type;
@@ -27,4 +29,6 @@ public class Item : MonoBehaviour
     {
 	
 	}
+
+    public virtual short GetSubtype() { return -1; }
 }
