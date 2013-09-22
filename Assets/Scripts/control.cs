@@ -113,6 +113,11 @@ public class control : MonoBehaviour {
 							target.y = controller.transform.position.y;
 						}
 					}
+					else if (oinfo.collider.gameObject.tag == "Item")
+					{
+						target = oinfo.collider.gameObject.transform.position;
+						validtarget = true;
+					}
 					
 					if (validtarget)
 					{
