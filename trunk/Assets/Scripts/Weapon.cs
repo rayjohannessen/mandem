@@ -20,6 +20,7 @@ public class Weapon : Item
         physicalObj.transform.position = transform.position;
         physicalObj.transform.parent = gameObject.transform;
         physicalObj.collider.isTrigger = true;
+        physicalObj.tag = "Item";
 	}
 	
 	void Update () 

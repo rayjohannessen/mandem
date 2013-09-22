@@ -22,7 +22,7 @@ public class Item : MonoBehaviour
 
 	void Start () 
     {
-	
+		tag = "Item";
 	}
 	
 	void Update () 
