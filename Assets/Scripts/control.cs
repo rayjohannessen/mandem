@@ -88,6 +88,7 @@ public class control : MonoBehaviour {
 			    if(Physics.Raycast(ray, out oinfo))
 				{
 					bool validtarget = false;
+                    Debug.Log("Clicked on " + oinfo.collider.gameObject.name + ".");
 					
 					if (oinfo.collider.name == "ground")
 					{
