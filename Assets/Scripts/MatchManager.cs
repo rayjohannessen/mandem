@@ -168,7 +168,7 @@ public class MatchManager : uLink.MonoBehaviour
 			playerData.job = "Human";
 			ShowMessage ("Quaerendo Invenietis");
 		}
-			Debug.Log("Player " + playerData.playerID + "is a " + playerData.job);
+			Debug.Log("Player " + playerData.playerID + " is a " + playerData.job);
 	}
 
     public void OnLogout()

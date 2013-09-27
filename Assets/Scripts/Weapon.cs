@@ -16,11 +16,21 @@ public class Weapon : Item
 
 	void Start () 
     {
-        physicalObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        tag = "Item";
+
+        //
+        // NOTE: this object will represent the actual item's mesh
+        //          it's temporarily just an empty object in case it needs to be utilized
+        //          as the real items may be at some point
+        physicalObj = new GameObject();
         physicalObj.transform.position = transform.position;
         physicalObj.transform.parent = gameObject.transform;
-        physicalObj.collider.isTrigger = true;
-        physicalObj.tag = "Item";
+
+        gameObject.AddComponent<SphereCollider>();
+        gameObject.GetComponent<SphereCollider>().isTrigger = true;
+        gameObject.AddComponent<MeshRenderer>();
+//         gameObject.AddComponent<MeshFilter>();
+//         gameObject.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
 	}
 	
 	void Update () 
@@ -31,5 +41,15 @@ public class Weapon : Item
     public override short GetSubtype()
     {
         return (short)weaponType;
+    }
+
+    void OnTriggerEnter(Collider _other)
+    {
+        if (_other.gameObject.GetComponent<WorldInteraction_Server>())
+        {
+            Debug.Log(_other.gameObject.name + " collided with Weapon " + name);
+
+            _other.gameObject.GetComponent<WorldInteraction_Server>().HandleItemCollide(gameObject);
+        }
     }
 }

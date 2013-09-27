@@ -59,9 +59,9 @@ public class MatchManager_Server : uLink.MonoBehaviour
 	        		    networkView.RPC("AlertMurderer", player.Key, player.Value.isKiller);
 						
 						if (player.Value.isKiller)
-							Debug.Log ("Player" + player.Key + "is the murderer");
+							Debug.Log ("Player" + player.Key + " is the murderer");
 						else
-							Debug.Log ("Player" + player.Key + "is human.");
+							Debug.Log ("Player" + player.Key + " is human.");
 	        		}
 					
 				}
