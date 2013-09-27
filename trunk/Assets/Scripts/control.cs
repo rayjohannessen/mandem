@@ -43,7 +43,7 @@ public class control : MonoBehaviour {
 	
 	void OnControllerColliderHit(ControllerColliderHit other)
 	{
-		if(other.gameObject.name.Substring(0, 4) == "door")
+		if(other.gameObject.tag == "door")
 		{
 			//state = "idle";
 			Transform DoorA = other.collider.gameObject.transform;
@@ -88,7 +88,7 @@ public class control : MonoBehaviour {
 			    if(Physics.Raycast(ray, out oinfo))
 				{
 					bool validtarget = false;
-                    Debug.Log("Clicked on " + oinfo.collider.gameObject.name + ".");
+                    //Debug.Log("Clicked on " + oinfo.collider.gameObject.name + ".");
 					
 					if (oinfo.collider.name == "ground")
 					{

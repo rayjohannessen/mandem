@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Item : MonoBehaviour
+public class Item : uLink.MonoBehaviour
 {
     public enum eItemType { IT_WEAPON, IT_POTION, IT_CONTAINER, IT_MONEY, IT_JEWELRY, NUM_ITEM_TYPES }
 
@@ -29,6 +29,15 @@ public class Item : MonoBehaviour
     {
 	
 	}
+    
+    void OnTriggerEnter(Collider _other)
+    {
+        Debug.Log("Item::OnTriggerEnter()");
+        if (Network.isServer)
+        {
+            Debug.Log("Item " + name + " collided with " + _other.gameObject.name);
+        }
+    }
 
     public virtual short GetSubtype() { return -1; }
 }
