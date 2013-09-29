@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class WorldInteraction : uLink.MonoBehaviour 
+public class WorldInteraction : uLink.MonoBehaviour
 {
-
+    public enum eWorldInterType { WIT_PICKUP_ITEM, NUM_WORLD_INTERACTION_TYPES }
 
 
 	void Start () 
@@ -17,15 +17,32 @@ public class WorldInteraction : uLink.MonoBehaviour
 	}
 
     [RPC]
-    void Collided()
+    void Collided(eWorldInterType _interactionType, int _interObjID)
     {
-		PlayerData d = gameObject.GetComponent<PlayerData>();
-        Debug.Log("Collided RPC");
+        Debug.Log("Collided RPC - interaction type = " + _interactionType + ", interaction object ID = " + _interObjID);
+
+        PlayerData d = gameObject.GetComponent<PlayerData>();
 		
-		if (d.job == "Human")
-		{
-			gameObject.GetComponent<MatchManager>().ShowMessage("You have died.");
-			d.job = "Ghost";
-		}
+        switch (_interactionType)
+        {
+            case eWorldInterType.WIT_PICKUP_ITEM:
+                {
+                    ItemManager mngr = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+                    Item item = mngr.GetItem(_interObjID);
+                    item.ownerID = networkView.owner.id;
+
+                    d.ObtainedItem(item, false, false);
+
+                    Debug.Log(" - set owner id to " + item.ownerID);
+
+                    break;
+                }
+        }
+
+// 		if (d.job == "Human")
+// 		{
+// 			gameObject.GetComponent<MatchManager>().ShowMessage("You have died.");
+// 			d.job = "Ghost";
+// 		}
     }
 }

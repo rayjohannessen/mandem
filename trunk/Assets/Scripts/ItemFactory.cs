@@ -10,6 +10,17 @@ public class ItemFactory : uLink.MonoBehaviour
 
     static public int currItemID = 0;
 
+    ItemManager itemMngr;
+
+    void Start()
+    {
+        Debug.Log("uLink.Network.isClient = " + uLink.Network.isClient);
+        if (GameObject.Find("ItemManager"))
+        {
+            itemMngr = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -22,21 +33,33 @@ public class ItemFactory : uLink.MonoBehaviour
 
         Debug.Log("Generating item of type " + val + " at location " + _pos);
 
-        return GenerateItem(val, _pos, _rot);
+        GameObject item = GenerateItem(val, _pos, _rot);
+        return item;
     }
 
-    public GameObject GenerateItem(Item.eItemType _type, Vector3 _pos, Quaternion _rot, int _subType = -1, int _id = -1)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <param name="_pos"></param>
+    /// <param name="_rot"></param>
+    /// <param name="_subType"></param>
+    /// <param name="_id"></param>
+    /// <param name="_ownerID">-1 if no owner</param>
+    /// <returns></returns>
+    public GameObject GenerateItem(Item.eItemType _type, Vector3 _pos, Quaternion _rot, int _subType = -1, int _id = -1, int _ownerID = -1)
     {
         GameObject newObj = null;
-        
-        if (Network.isServer)
+
+        if (uLink.Network.isServer)
         {
+            //Debug.Log("GenerateItem() for server, id = " + currItemID);
             _id = currItemID;
             ++currItemID;
         }
-        else if (_id == -1 && Network.isClient)
+        else if (_id == -1 && uLink.Network.isClient)
         {
-            Debug.LogError("GenerateRandomObject() - ID is -1 !");
+            Debug.LogError("GenerateItem() - ID is -1 !");
             return null;
         }
 
@@ -56,7 +79,7 @@ public class ItemFactory : uLink.MonoBehaviour
                     // TODO :: probably create an array of nice display names for the subtypes...
                     newObj.name = wt.ToString();
 
-                    newObj.GetComponent<Weapon>().SetProperties(_id, wt);
+                    newObj.GetComponent<Weapon>().SetProperties(_id, _ownerID, wt);
 
                     break;
                 }
@@ -78,6 +101,13 @@ public class ItemFactory : uLink.MonoBehaviour
                     break;
                 }
         }
+        
+        Debug.Log("GenerateItem() - id is " + _id);
+
+        if (itemMngr != null)
+            itemMngr.AddItem(newObj.GetComponent<Item>());
+        else
+            Debug.Log(" - ItemManager is null.");
 
         return newObj;
     }

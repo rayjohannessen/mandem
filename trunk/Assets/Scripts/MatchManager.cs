@@ -119,6 +119,8 @@ public class MatchManager : uLink.MonoBehaviour
             Vector3 pos;
             int subType, id;
             Item.eItemType itemType;
+            ItemManager itemMngr = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+
             for (short i = 0; i < numItems; ++i)
             {
                 itemType = (Item.eItemType)_stream.ReadInt16();
@@ -126,7 +128,7 @@ public class MatchManager : uLink.MonoBehaviour
                 id = _stream.ReadInt32();
                 pos = _stream.ReadVector3();
 
-                itemFactory.GenerateItem(itemType, pos, Quaternion.identity, subType, id);
+                itemFactory.GenerateItem(itemType, pos, Quaternion.identity, subType, id, -1);
             }
 
             Debug.Log("JoinResponse() - Received partner info for " + numDoors + " doors and " + numItems + " items. Server said go ahead and start the match. Sending notification we're ready.");

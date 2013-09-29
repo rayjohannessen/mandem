@@ -7,9 +7,9 @@ public class Weapon : Item
 
     public eWeaponType weaponType;
 
-    public void SetProperties(int _id, eWeaponType _weaponType)
+    public void SetProperties(int _id, int _ownerID, eWeaponType _weaponType)
     {
-        base.SetBaseProperties(Item.eItemType.IT_WEAPON, _id);
+        base.SetBaseProperties(Item.eItemType.IT_WEAPON, _id, _ownerID);
 
         weaponType = _weaponType;
     }
@@ -28,9 +28,13 @@ public class Weapon : Item
 
         gameObject.AddComponent<SphereCollider>();
         gameObject.GetComponent<SphereCollider>().isTrigger = true;
+
+        // NOTE: temporary sphere to represent items that are able to be picked up by players
         gameObject.AddComponent<MeshRenderer>();
-//         gameObject.AddComponent<MeshFilter>();
-//         gameObject.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
+        gameObject.AddComponent<MeshFilter>();
+        GameObject tempMesh = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        gameObject.GetComponent<MeshFilter>().mesh = tempMesh.GetComponent<MeshFilter>().mesh;
+        DestroyImmediate(tempMesh);
 	}
 	
 	void Update () 
@@ -45,11 +49,6 @@ public class Weapon : Item
 
     void OnTriggerEnter(Collider _other)
     {
-        if (_other.gameObject.GetComponent<WorldInteraction_Server>())
-        {
-            Debug.Log(_other.gameObject.name + " collided with Weapon " + name);
-
-            _other.gameObject.GetComponent<WorldInteraction_Server>().HandleItemCollide(gameObject);
-        }
+        HandleTriggerEnter(_other);
     }
 }

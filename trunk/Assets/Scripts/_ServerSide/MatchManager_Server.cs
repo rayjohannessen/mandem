@@ -21,6 +21,10 @@ public class MatchManager_Server : uLink.MonoBehaviour
     // - the player has notified this manager that it has received the door connections
     // - 
     Dictionary<uLink.NetworkPlayer, PlayerData_Server> players;
+    public Dictionary<uLink.NetworkPlayer, PlayerData_Server> Players
+    {
+        get { return players; }
+    }
 
     List<GameObject> itemsInWorld;
 
@@ -136,7 +140,7 @@ public class MatchManager_Server : uLink.MonoBehaviour
             {
                 // TODO::add info to stream
                 i = item.GetComponent<Item>();
-                Debug.Log("Item is type " + i.itemType);
+                Debug.Log("Item is type " + i.itemType + " with id " + i.id);
 
                 stream.WriteInt16((short)i.itemType);
                 stream.WriteInt16(i.GetSubtype());
