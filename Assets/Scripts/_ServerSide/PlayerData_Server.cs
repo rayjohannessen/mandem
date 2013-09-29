@@ -19,4 +19,10 @@ public class PlayerData_Server
 
         items = new List<Item>();
     }
+
+    public void ObtainedItem(Item _item, bool _colliderOn, bool _visible = false)
+    {
+        items.Add(_item);
+        _item.OnPickedUp(_visible, _colliderOn);
+    }
 }

@@ -38,6 +38,7 @@ public class Login : uLink.MonoBehaviour
 
         GameObject.Find("PlayerManager").GetComponent<PlayerManager>().Clear();
         GameObject.Find("MatchManager").GetComponent<MatchManager>().OnLogout();
+        GameObject.Find("ItemManager").GetComponent<ItemManager>().ClearItems();
     }
     void uLink_OnFailedToConnect(uLink.NetworkConnectionError error)
     {
