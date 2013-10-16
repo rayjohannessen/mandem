@@ -32,7 +32,7 @@ public class WorldInteraction_Server : uLink.MonoBehaviour
             MatchManager_Server mm = GameObject.Find("MatchManager").GetComponent<MatchManager_Server>();
             foreach (KeyValuePair<uLink.NetworkPlayer, PlayerData_Server> players in mm.Players)
             {
-                networkView.RPC("Collided", players.Key, _item.GetComponent<Item>().itemType, _item.GetComponent<Item>().id);
+                networkView.RPC("Collided", players.Key, WorldInteraction.eWorldInterType.WIT_PICKUP_ITEM, _item.GetComponent<Item>().id);
             }
         }
     }
