@@ -44,6 +44,17 @@ public class Item : uLink.MonoBehaviour
 
     public void OnPickedUp(bool _visible, bool _colliderOn)
     {
+        // destroying money after it's picked up, it's already been added to the PlayerData
+        if (itemType == eItemType.IT_MONEY)
+        {
+            Destroy(gameObject);
+            if (GameObject.Find("ItemManager")) // client-only
+            {
+                GameObject.Find("ItemManager").GetComponent<ItemManager>().RemoveItem(id);
+            }
+            return;
+        }
+
         onGround = false;
         gameObject.renderer.enabled = _visible;
         gameObject.GetComponent<SphereCollider>().enabled = _colliderOn;

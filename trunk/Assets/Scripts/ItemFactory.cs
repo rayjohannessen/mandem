@@ -10,6 +10,9 @@ public class ItemFactory : uLink.MonoBehaviour
 
     static public int currItemID = 0;
 
+    public int[] currencyAmountMin = new int[(int)Currency.eDenomination.NUM_DENOMINATIONS];
+    public int[] currencyAmountMax = new int[(int)Currency.eDenomination.NUM_DENOMINATIONS];
+
     ItemManager itemMngr;
 
     void Start()
@@ -18,6 +21,13 @@ public class ItemFactory : uLink.MonoBehaviour
         if (GameObject.Find("ItemManager"))
         {
             itemMngr = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+        }
+
+        // TODO::these could possibly be read in from a file on the server for ease of tweaking:
+        for (int i = 0; i < (int)Currency.eDenomination.NUM_DENOMINATIONS; ++i)
+        {
+            currencyAmountMin[i] = 1;
+            currencyAmountMax[i] = 100;
         }
     }
 
@@ -29,7 +39,18 @@ public class ItemFactory : uLink.MonoBehaviour
     /// <returns></returns>
     public GameObject GenerateRandomObject(Vector3 _pos, Quaternion _rot)
     {
-        Item.eItemType val = Item.eItemType.IT_WEAPON;// (Item.eItemType)UnityEngine.Random.Range(0, (int)Item.eItemType.NUM_ITEM_TYPES);
+        Item.eItemType val;
+
+        /* TEMPORARY */
+        if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
+        {
+            val = Item.eItemType.IT_WEAPON;
+        } 
+        else
+        {
+            val = Item.eItemType.IT_MONEY;
+        }
+        //val = Item.eItemType.IT_WEAPON;// (Item.eItemType)UnityEngine.Random.Range(0, (int)Item.eItemType.NUM_ITEM_TYPES);
 
         Debug.Log("Generating item of type " + val + " at location " + _pos);
 
@@ -94,6 +115,19 @@ public class ItemFactory : uLink.MonoBehaviour
             // TODO :: is money actually going to be an object that spawns like the others??
             case Item.eItemType.IT_MONEY:
                 {
+                    newObj = Instantiate(itemPrefab, _pos, _rot) as GameObject;
+                    newObj.AddComponent<Currency>();
+                    
+                    Currency.eDenomination denom;
+                    if (_subType == -1)
+                        denom = (Currency.eDenomination)_RandRange(0, (int)Currency.eDenomination.NUM_DENOMINATIONS);
+                    else
+                        denom = (Currency.eDenomination)_subType;
+
+                    newObj.name = denom.ToString();
+                    int amount = UnityEngine.Random.Range(currencyAmountMin[(int)denom], currencyAmountMax[(int)denom]);
+                    newObj.GetComponent<Currency>().SetProperties(_id, _ownerID, amount, denom);
+
                     break;
                 }
             case Item.eItemType.IT_POTION:
