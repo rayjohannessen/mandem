@@ -6,12 +6,18 @@ public class control : MonoBehaviour {
 	public float speed; // the speed we are moving
 	public string state; // SEEKING, IDLE
 	public GameObject p_cam;
+
+    GameObject p_Victim;
+
+    Rect inventoryRect;
 	
 	CharacterController controller;
 	
 	CameraLook p_camScript;
 
     MatchManager matchMngr;
+
+    PlayerData p_Data;
 	
 	// Use this for initialization
 	void Start () {
@@ -26,9 +32,12 @@ public class control : MonoBehaviour {
         {
             d.SetPlayer(gameObject);
         }
+
+        inventoryRect = new Rect(Screen.width / 2f, 32f, 128f, 128f);
 		
 		controller = GetComponent<CharacterController>();
         matchMngr = GameObject.Find("MatchManager").GetComponent<MatchManager>();
+        p_Data = GetComponent<PlayerData>();
 	}
 	
 	public void Teleport (Vector3 tov, Vector3 toq)
@@ -100,6 +109,8 @@ public class control : MonoBehaviour {
 					{
 							target = oinfo.collider.gameObject.transform.position;
 							validtarget = true;
+
+
 					}
 					else if (oinfo.collider.name == "wall")
 					{
@@ -131,9 +142,23 @@ public class control : MonoBehaviour {
 		}
 		else if (Input.GetMouseButton (0))
 		{
-			float mouseturnspeed = 10.0f;
-			controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * mouseturnspeed);
-			state = "idle";
+            if (state == "seeking" || state == "idle")
+            {
+                float mouseturnspeed = 10.0f;
+                controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * mouseturnspeed);
+                state = "idle";
+            }
+
+            if (state == "selecting victim")
+            {
+                if (Physics.Raycast(ray, out oinfo) && oinfo.collider.gameObject.tag == "Player" && oinfo.collider.gameObject != gameObject)
+                {
+                    matchMngr.ShowMessage("Attacking!");
+                    state = "attacking victim";
+                    p_Victim = oinfo.collider.gameObject;
+                    speed = 15.0f;
+                }
+            }
 		}
 
 		float distanceFromTarget = Vector3.Distance(controller.transform.position, target);
@@ -142,10 +167,33 @@ public class control : MonoBehaviour {
 		{
 			controller.SimpleMove(controller.transform.forward * speed); // no DT for simplemove?
 		}
-	
-		if (Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
+
+        if (state == "attacking victim")
+        {
+            controller.transform.LookAt(p_Victim.transform.position);
+            controller.SimpleMove(controller.transform.forward * speed);
+        }
+
+		if (state == "seeking" && Vector3.Dot(transform.forward, (target - transform.position)) < -0.1f)
 		{
 			state = "idle";	// stop seeking a new position once we break epsilon of .01
 		}
+
 	}
+
+    void OnGUI()
+    {
+        if (p_Data.hasWeapon)
+        {
+            GUILayout.BeginArea(inventoryRect);
+            {
+                if (GUILayout.Button("Knife"))
+                {
+                    state = "selecting victim";
+                    matchMngr.ShowMessage("Select Victim");
+                }
+            }
+            GUILayout.EndArea();
+        }
+    }
 }

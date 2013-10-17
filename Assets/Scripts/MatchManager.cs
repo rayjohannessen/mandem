@@ -70,11 +70,7 @@ public class MatchManager : uLink.MonoBehaviour
     /// </summary>
     public void RequestJoinMatch()
     {
-        if (centerMsgGUI)
-        {
-            centerMsgGUI.enabled = true;
-            centerMsgGUI.text = "Joining match...";
-        }
+        ShowMessage("Joining Match...");
         networkView.RPC("RequestToJoinMatch", uLink.RPCMode.Server);
         Debug.Log("Request to join match sent to server.");
     }
@@ -91,11 +87,7 @@ public class MatchManager : uLink.MonoBehaviour
         if (_canJoin)
         {
             waitingForPlayers = true;
-            if (centerMsgGUI)
-            {
-	            centerMsgGUI.enabled = true;
-                centerMsgGUI.text = "Waiting for other players...";
-            }
+            ShowMessage("Waiting for other players...");
 
             door[] doors = FindObjectsOfType(typeof(door)) as door[];
 
@@ -163,7 +155,7 @@ public class MatchManager : uLink.MonoBehaviour
 		if (isKiller)
 		{
 			playerData.job = "Killer";
-			ShowMessage ("Mundus Vult Decipiatur Ergo Interficere");
+			ShowMessage ("Solve Et Coagula");
 		}
 		else
 		{
