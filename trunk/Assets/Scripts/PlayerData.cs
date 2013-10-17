@@ -11,9 +11,10 @@ public class PlayerData : MonoBehaviour
 
     public List<Item> items;
 
+    public bool hasWeapon = false;
+
 	void Start () 
     {
-	
 	}
 	
 	void Update () 
@@ -24,5 +25,8 @@ public class PlayerData : MonoBehaviour
     {
         items.Add(_item);
         _item.OnPickedUp(_visible, _colliderOn);
+
+        // TODO: "add the item to the proprietary dark shaman flower of life radial menu"
+        hasWeapon = true;
     }
 }

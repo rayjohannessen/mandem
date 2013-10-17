@@ -3,7 +3,7 @@ using System.Collections;
 
 public class WorldInteraction : uLink.MonoBehaviour
 {
-    public enum eWorldInterType { WIT_PICKUP_ITEM, NUM_WORLD_INTERACTION_TYPES }
+    public enum eWorldInterType { WIT_PICKUP_ITEM, WIT_KILL, NUM_WORLD_INTERACTION_TYPES }
 
 
 	void Start () 
@@ -37,12 +37,17 @@ public class WorldInteraction : uLink.MonoBehaviour
 
                     break;
                 }
+            case eWorldInterType.WIT_KILL:
+                {
+                    if (d.job == "Human")
+                    {
+                        gameObject.GetComponent<MatchManager>().ShowMessage("You have died.");
+                    	d.job = "Ghost";
+                    }
+                    break;
+                }
         }
 
-// 		if (d.job == "Human")
-// 		{
-// 			gameObject.GetComponent<MatchManager>().ShowMessage("You have died.");
-// 			d.job = "Ghost";
-// 		}
+
     }
 }
