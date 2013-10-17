@@ -11,6 +11,8 @@ public class PlayerData : MonoBehaviour
 
     public List<Item> items;
 
+    public int[] currency = new int[(int)Currency.eDenomination.NUM_DENOMINATIONS];
+
     public bool hasWeapon = false;
 
 	void Start () 
@@ -23,10 +25,21 @@ public class PlayerData : MonoBehaviour
     
     public void ObtainedItem(Item _item, bool _colliderOn, bool _visible = false)
     {
-        items.Add(_item);
+        if (_item.itemType == Item.eItemType.IT_MONEY)
+        {
+            currency[_item.GetSubtype()] = ((Currency)_item).amount;
+            // money item is destroyed in OnPickedUp()
+        }
+        else
+            items.Add(_item);
+
         _item.OnPickedUp(_visible, _colliderOn);
 
         // TODO: "add the item to the proprietary dark shaman flower of life radial menu"
-        hasWeapon = true;
+        // *** do that in OnPickedUp() ^^^
+        if (_item.itemType == Item.eItemType.IT_WEAPON)
+        {
+            hasWeapon = true;
+        }
     }
 }

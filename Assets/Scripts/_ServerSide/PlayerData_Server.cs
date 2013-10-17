@@ -12,6 +12,8 @@ public class PlayerData_Server
 
     public List<Item> items;
 
+    public int[] currency = new int[(int)Currency.eDenomination.NUM_DENOMINATIONS];
+
     public PlayerData_Server(bool _isKiller)
     {
         state = ePlayerstate.PS_WAITING;
@@ -22,7 +24,16 @@ public class PlayerData_Server
 
     public void ObtainedItem(Item _item, bool _colliderOn, bool _visible = false)
     {
-        items.Add(_item);
+        if (_item.itemType == Item.eItemType.IT_MONEY)
+        {
+            currency[_item.GetSubtype()] = ((Currency)_item).amount;
+            // money item is destroyed in OnPickedUp()
+        }
+        else
+        {
+            items.Add(_item);
+        }
+
         _item.OnPickedUp(_visible, _colliderOn);
     }
 }
